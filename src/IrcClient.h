@@ -14,6 +14,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <functional>
 
 #include <windows.h>
 #include <winsock2.h>
@@ -29,6 +30,7 @@ namespace LibIrc
         IrcClient();
         ~IrcClient();
     public:
+        std::function<void(IrcMessage)> onMessage;
         void connect(std::string hostName, int port, LibIrc::IrcRegistrationInfo registrationInfo);
         void sendRawMessage(std::string message);
     private:

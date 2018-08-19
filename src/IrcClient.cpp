@@ -124,15 +124,11 @@ void IrcClient::sendRawMessage(string message)
         closesocket(this->socket);
         WSACleanup();
         return;
-    } else {
-        printf("Sending: '%s'", buffer);
     }
 }
 
 void IrcClient::parseMessage(string line)
 {
-    std::cout << line << "\r\n";
-
     string prefix;
     string lineAfterPrefix;
 
@@ -195,6 +191,7 @@ void IrcClient::parseMessage(string line)
     message.command = toUpperCase(command);
     message.parameters = parameters;
     message.source = this->getSourceFromPrefix(prefix);
+    message.raw = line;
 
     this->processMessage(message);
 }
@@ -205,9 +202,10 @@ void IrcClient::processMessage(IrcMessage message)
     {
         this->sendMessagePong(message.parameters[0]);
     }
-    else if (message.command == "001")
+    
+    if (this->onMessage != nullptr) 
     {
-
+        this->onMessage(message);
     }
 }
 
@@ -244,13 +242,10 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
         WSACleanup();
         return;
     }
-    else
-    {
-        printf("%s", buffer);
-    }
 }
 
-void IrcClient::sendMessageNick(string nickName) {
+void IrcClient::sendMessageNick(string nickName) 
+{
     this->writeMessage("", "NICK", { nickName });
 }
 

@@ -15,5 +15,6 @@ namespace LibIrc
         std::string command;
         std::vector<std::string> parameters;
         IrcMessageSource *source;
+        std::string raw;
     };
 }
