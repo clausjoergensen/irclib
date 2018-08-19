@@ -241,40 +241,36 @@ void IrcClient::parseMessage(string line)
         lineAfterPrefix = line;
     }
 
-    int spaceIndex = lineAfterPrefix.find(" ");
-    if (spaceIndex == -1)
+    size_t spaceIndex = lineAfterPrefix.find(" ");
+    if (spaceIndex == std::string::npos)
     {
         return;
     }
 
-    auto command = lineAfterPrefix.substr(0, spaceIndex);
-    auto paramsLine = lineAfterPrefix.substr(command.length() + 1);
-    int paramsLineLength = paramsLine.length();
+    string command = lineAfterPrefix.substr(0, spaceIndex);
+    string paramsLine = lineAfterPrefix.substr(command.length() + 1);
+    size_t paramsLineLength = paramsLine.length();
 
     vector<string> parameters;
     int paramStartIndex = -1;
-    int paramEndIndex = -1;
+    size_t paramEndIndex = std::string::npos;
 
-    int lineColonIndex = paramsLine.find(" :");
-    if (lineColonIndex == -1 && paramsLine.find(":") != 0)
+    size_t lineColonIndex = paramsLine.find(" :");
+    if (lineColonIndex == std::string::npos && paramsLine.find(":") != 0)
     {
         lineColonIndex = paramsLineLength;
-    }
-    else
-    {
-        lineColonIndex = -1;
     }
 
     for (int i = 0; i < MAX_PARAMETERS_COUNT; i++)
     {
-        paramStartIndex = paramEndIndex + 1;
+        paramStartIndex = (int)paramEndIndex + 1;
         paramEndIndex = paramsLine.find(' ', paramStartIndex);
 
-        if (paramEndIndex == -1) {
+        if (paramEndIndex == std::string::npos) {
             paramEndIndex = paramsLineLength;
         }
 
-        if (paramEndIndex > lineColonIndex)
+        if (lineColonIndex == std::string::npos || paramEndIndex > lineColonIndex)
         {
             paramStartIndex++;
             paramEndIndex = paramsLineLength;
@@ -323,7 +319,7 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
 
     ss << command;
 
-    int n = parameters.size();
+    size_t n = parameters.size();
     for (int i = 0; i < n - 1; i++)
     {
         ss << " " << parameters[i];
