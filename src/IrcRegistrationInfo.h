@@ -4,14 +4,14 @@
 #include <string>
 #include <vector>
 
-namespace LibIrc
-{
-    struct IrcRegistrationInfo
-    {
-        std::string nickName;
-        std::string userName;
-        std::string realName;
-        std::string password;
-        std::vector<char> userModes;
-    };
+namespace LibIrc {
+
+struct IrcRegistrationInfo {
+	std::string nickName;
+	std::string userName;
+	std::string realName;
+	std::string password;
+	std::vector<char> userModes;
+};
+
 }

@@ -3,37 +3,34 @@
 
 #include "IrcMessageSource.h"
 
-namespace LibIrc
-{
-    class IrcUser : public IrcMessageSource
-    {
-    public:
-        IrcUser();
-        ~IrcUser();
-    public:
-        std::string nickName;
-        std::string userName;
-        std::string hostName;
-    public:
-        std::string getName() 
-        {
-            return this->nickName;
-        }
-        bool isLocalUser() 
-        {
-            return false;
-        }
-    };
+namespace LibIrc {
 
-    class IrcLocalUser : public IrcUser 
-    {
-    public:
-        IrcLocalUser();
-        ~IrcLocalUser();
-    public:
-        bool isLocalUser() 
-        {
-            return true;
-        }
-    };
+class IrcUser : public IrcMessageSource {
+public:
+	IrcUser();
+	~IrcUser();
+
+	std::string nickName;
+	std::string userName;
+	std::string hostName;
+
+	std::string getName() {
+		return this->nickName;
+	}
+
+	bool isLocalUser() {
+		return false;
+	}
+};
+
+class IrcLocalUser : public IrcUser {
+public:
+	IrcLocalUser();
+	~IrcLocalUser();
+public:
+	bool isLocalUser() {
+		return true;
+	}
+};
+
 }

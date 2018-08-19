@@ -3,19 +3,18 @@
 
 #include "IrcMessageSource.h"
 
-namespace LibIrc
-{
-    class IrcServer: public IrcMessageSource
-    {
-    public:
-        IrcServer();
-        ~IrcServer();
-    public:
-        std::string hostName;
-    public:
-        std::string getName()
-        {
-            return this->hostName;
-        }
-    };
+namespace LibIrc {
+
+class IrcServer : public IrcMessageSource {
+public:
+	IrcServer();
+	~IrcServer();
+
+	std::string hostName;
+
+	std::string getName() {
+		return this->hostName;
+	}
+};
+
 }
