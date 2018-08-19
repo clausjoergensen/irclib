@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # Visual Studio Code output
-out/
+IrcClient.exe

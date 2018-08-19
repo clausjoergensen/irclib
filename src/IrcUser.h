@@ -1,5 +1,6 @@
 // Copyright (c) 2018 Claus Jørgensen
 #pragma once
+
 #include "IrcMessageSource.h"
 
 namespace LibIrc
@@ -17,6 +18,22 @@ namespace LibIrc
         std::string getName() 
         {
             return this->nickName;
+        }
+        bool isLocalUser() 
+        {
+            return false;
+        }
+    };
+
+    class IrcLocalUser : public IrcUser 
+    {
+    public:
+        IrcLocalUser();
+        ~IrcLocalUser();
+    public:
+        bool isLocalUser() 
+        {
+            return true;
         }
     };
 }

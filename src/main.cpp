@@ -1,4 +1,5 @@
 // Copyright (c) 2018 Claus Jørgensen
+
 #include "IrcClient.h"
 #include <thread>
 
@@ -21,11 +22,11 @@ int main()
     });
 
     do 
-     {
+    {
         string line;
         getline(std::cin, line);
 
-        client->sendRawMessage(line + "\r\n");
+        client->sendRawMessage(line);
 
         if (line == "QUIT") {
             t.join();

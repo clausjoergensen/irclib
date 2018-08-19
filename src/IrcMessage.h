@@ -1,5 +1,6 @@
 // Copyright (c) 2018 Claus Jørgensen
 #pragma once
+
 #include <string>
 #include <vector>
 

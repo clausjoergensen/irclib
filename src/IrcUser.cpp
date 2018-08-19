@@ -1,4 +1,5 @@
 // Copyright (c) 2018 Claus Jørgensen
+
 #include "IrcUser.h"
 
 using namespace std;
@@ -9,5 +10,13 @@ IrcUser::IrcUser()
 }
 
 IrcUser::~IrcUser()
+{
+}
+
+IrcLocalUser::IrcLocalUser()
+{
+}
+
+IrcLocalUser::~IrcLocalUser()
 {
 }
