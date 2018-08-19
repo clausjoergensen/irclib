@@ -30,60 +30,60 @@ namespace LibIrc {
  */
 class IrcClient {
 public:
-	/**
-	 * Initializes a new instance of the IrcClient class.
-	 */
-	IrcClient();
+    /**
+     * Initializes a new instance of the IrcClient class.
+     */
+    IrcClient();
 
-	/**
-	 * Tears down the connection if open.
-	 */
-	~IrcClient();
+    /**
+     * Tears down the connection if open.
+     */
+    ~IrcClient();
 
-	/**
-	 * Callback for when the IrcClients receives a new message.
-	 */
-	std::function<void(IrcMessage)> onMessage;
+    /**
+     * Callback for when the IrcClients receives a new message.
+     */
+    std::function<void(IrcMessage)> onMessage;
 
-	/**
-	 * Connects to the specified server.
-	 *
-	 * \param hostName The name of the remote host.
-	 * \param port The port number of the remote host.
-	 * \param registrationInfo The information used for registering the client.
-	 */
-	void connect(std::string hostName, int port, LibIrc::IrcRegistrationInfo registrationInfo);
+    /**
+     * Connects to the specified server.
+     *
+     * \param hostName The name of the remote host.
+     * \param port The port number of the remote host.
+     * \param registrationInfo The information used for registering the client.
+     */
+    void connect(std::string hostName, int port, LibIrc::IrcRegistrationInfo registrationInfo);
 
-	/**
-	 * Sends the specified raw message to the server.
-	 *
-	 * \param message The text (single line) of the message to send the server. No CR/LF should be appended.
-	 */
-	void sendRawMessage(std::string message);
+    /**
+     * Sends the specified raw message to the server.
+     *
+     * \param message The text (single line) of the message to send the server. No CR/LF should be appended.
+     */
+    void sendRawMessage(std::string message);
 
 private:
-	void parseMessage(std::string line);
-	void processMessage(LibIrc::IrcMessage message);
-	void writeMessage(std::string prefix, std::string command, std::vector<std::string> parameters);
+    void parseMessage(std::string line);
+    void processMessage(LibIrc::IrcMessage message);
+    void writeMessage(std::string prefix, std::string command, std::vector<std::string> parameters);
 
-	void sendMessagePassword(std::string password);
-	void sendMessageNick(std::string nickName);
-	void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
-	void sendMessagePong(std::string ping);
+    void sendMessagePassword(std::string password);
+    void sendMessageNick(std::string nickName);
+    void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
+    void sendMessagePong(std::string ping);
 
-	LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
-	LibIrc::IrcUser* getUserFromNickName(std::string nickName);
-	LibIrc::IrcServer* getServerFromHostName(std::string hostName);
+    LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
+    LibIrc::IrcUser* getUserFromNickName(std::string nickName);
+    LibIrc::IrcServer* getServerFromHostName(std::string hostName);
 
-	std::string hostName;
-	int port;
-	LibIrc::IrcRegistrationInfo registrationInfo;
+    std::string hostName;
+    int port;
+    LibIrc::IrcRegistrationInfo registrationInfo;
 
-	WSADATA wsaData;
-	SOCKET socket;
+    WSADATA wsaData;
+    SOCKET socket;
 
-	std::vector<LibIrc::IrcUser*> users;
-	std::vector<LibIrc::IrcServer*> servers;
+    std::vector<LibIrc::IrcUser*> users;
+    std::vector<LibIrc::IrcServer*> servers;
 };
 
 }

@@ -7,30 +7,30 @@ namespace LibIrc {
 
 class IrcUser : public IrcMessageSource {
 public:
-	IrcUser();
-	~IrcUser();
+    IrcUser();
+    ~IrcUser();
 
-	std::string nickName;
-	std::string userName;
-	std::string hostName;
+    std::string nickName;
+    std::string userName;
+    std::string hostName;
 
-	std::string getName() {
-		return this->nickName;
-	}
+    std::string getName() {
+        return this->nickName;
+    }
 
-	bool isLocalUser() {
-		return false;
-	}
+    bool isLocalUser() {
+        return false;
+    }
 };
 
 class IrcLocalUser : public IrcUser {
 public:
-	IrcLocalUser();
-	~IrcLocalUser();
+    IrcLocalUser();
+    ~IrcLocalUser();
 public:
-	bool isLocalUser() {
-		return true;
-	}
+    bool isLocalUser() {
+        return true;
+    }
 };
 
 }

@@ -10,12 +10,12 @@ class IrcClient;
 class IrcMessageSource;
 
 struct IrcMessage {
-	IrcClient *client;
-	std::string prefix;
-	std::string command;
-	std::vector<std::string> parameters;
-	IrcMessageSource *source;
-	std::string raw;
+    IrcClient *client;
+    std::string prefix;
+    std::string command;
+    std::vector<std::string> parameters;
+    IrcMessageSource *source;
+    std::string raw;
 };
 
 }

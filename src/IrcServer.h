@@ -7,14 +7,14 @@ namespace LibIrc {
 
 class IrcServer : public IrcMessageSource {
 public:
-	IrcServer();
-	~IrcServer();
+    IrcServer();
+    ~IrcServer();
 
-	std::string hostName;
+    std::string hostName;
 
-	std::string getName() {
-		return this->hostName;
-	}
+    std::string getName() {
+        return this->hostName;
+    }
 };
 
 }
