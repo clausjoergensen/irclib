@@ -4,19 +4,19 @@
 
 namespace LibIrc
 {
-	class IrcUser : public IrcMessageSource
-	{
-	public:
-		IrcUser();
-		~IrcUser();
-	public:
-		std::string nickName;
-		std::string userName;
-		std::string hostName;
-	public:
-		std::string getName() 
-		{
-			return this->nickName;
-		}
-	};
+    class IrcUser : public IrcMessageSource
+    {
+    public:
+        IrcUser();
+        ~IrcUser();
+    public:
+        std::string nickName;
+        std::string userName;
+        std::string hostName;
+    public:
+        std::string getName() 
+        {
+            return this->nickName;
+        }
+    };
 }

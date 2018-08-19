@@ -5,15 +5,15 @@
 
 namespace LibIrc
 {
-	class IrcClient;
-	class IrcMessageSource;
+    class IrcClient;
+    class IrcMessageSource;
 
-	struct IrcMessage
-	{
-		IrcClient *client;
-		std::string prefix;
-		std::string command;
-		std::vector<std::string> parameters;
-		IrcMessageSource *source;
-	};
+    struct IrcMessage
+    {
+        IrcClient *client;
+        std::string prefix;
+        std::string command;
+        std::vector<std::string> parameters;
+        IrcMessageSource *source;
+    };
 }

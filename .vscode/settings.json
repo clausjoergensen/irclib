@@ -53,5 +53,8 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp"
-    }
+    },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
 }
