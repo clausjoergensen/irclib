@@ -62,7 +62,8 @@ IrcClient::~IrcClient() {
     ::WSACleanup();
 }
 
-void IrcClient::connect(const string hostName, const int port, const IrcRegistrationInfo registrationInfo) {
+void IrcClient::connect(const string hostName, const int port,
+                        const IrcRegistrationInfo registrationInfo) {
     this->hostName = hostName;
     this->port = port;
     this->registrationInfo = registrationInfo;
