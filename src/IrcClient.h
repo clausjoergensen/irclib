@@ -18,43 +18,30 @@
 
 namespace LibIrc {
 
-/**
- * Represents a client that communicates with a server using the IRC (Internet
- * Relay Chat) protocol.
- */
+// Represents a client that communicates with a server using the IRC (Internet
+// Relay Chat) protocol.
 class IrcClient : public EventEmitter {
   public:
-    /**
-     * Initializes a new instance of the IrcClient class.
-     */
+    // Initializes a new instance of the IrcClient class.
     IrcClient();
 
-    /**
-     * Tears down the connection if open.
-     */
+    // Tears down the connection if open.
     ~IrcClient();
 
-    /**
-     * Connects to the specified server.
-     *
-     * \param hostname The name of the remote host.
-     * \param port The port number of the remote host.
-     * \param registration_info The information used for registering the client.
-     */
+    // Connects to the specified server.
+    //
+    // \param hostname The name of the remote host.
+    // \param port The port number of the remote host.
+    // \param registration_info The information used for registering the client.
     void connect(const std::string hostname, const int port,
                  const LibIrc::IrcRegistrationInfo registration_info);
 
-    /**
-     * Sends the specified raw message to the server.
-     *
-     * \param message The text (single line) of the message to send the server.
-     * No CR/LF should be appended.
-     */
+    //Sends the specified raw message to the server.
+    // \param message The text (single line) of the message to send the server.
+    // No CR/LF should be appended.
     void sendRawMessage(const std::string message);
 
-    /**
-     * Gets the local user (or a nullptr before registering).
-     */
+    // Gets the local user (or a nullptr before registering).
     const LibIrc::IrcLocalUser* getLocalUser() {
         return this->local_user;
     }
