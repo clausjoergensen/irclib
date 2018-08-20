@@ -1,5 +1,4 @@
-// Copyright (c) 2018 Claus Jørgensen
-
+// This code is licensed under MIT license (see LICENSE.txt for details)
 #include "../src/IrcClient.h"
 #include <crtdbg.h>
 #include <thread>

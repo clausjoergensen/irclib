@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Claus Jørgensen
+// This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
 #include <string>
