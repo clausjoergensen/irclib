@@ -66,8 +66,10 @@ private:
     void listen(std::string remainder = "");
 
     void parseMessage(std::string line);
+
     void processMessage(LibIrc::IrcMessage message);
-    
+    void processMessagePing(LibIrc::IrcMessage message);
+
     void writeMessage(std::string message);
     void writeMessage(std::string prefix, std::string command, std::vector<std::string> parameters);
 
@@ -75,8 +77,6 @@ private:
     void sendMessageNick(std::string nickName);
     void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
     void sendMessagePong(std::string ping);
-
-    void processMessagePing(LibIrc::IrcMessage message);
 
     LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
     LibIrc::IrcUser* getUserFromNickName(std::string nickName);
