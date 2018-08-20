@@ -17,9 +17,9 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-const char *WSAFormatError(int errorCode);
+const char* WSAFormatError(int errorCode);
 
-std::string &toUpperCase(std::string &str) {
+std::string& toUpperCase(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
     return str;
 }
@@ -64,7 +64,7 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     this->port = port;
     this->registrationInfo = registrationInfo;
 
-    struct addrinfo *addressInfo;
+    struct addrinfo* addressInfo;
     struct addrinfo hints;
 
     ZeroMemory(&hints, sizeof(hints));
@@ -377,7 +377,7 @@ void IrcClient::processMessagePing(IrcMessage message) {
 
 // - Utils
 
-IrcMessageSource *IrcClient::getSourceFromPrefix(string prefix) {
+IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
     auto dotIdx = prefix.find('.') + 1;
     auto bangIdx = prefix.find('!') + 1;
     auto atIdx = prefix.find('@', bangIdx) + 1;
@@ -404,8 +404,8 @@ IrcMessageSource *IrcClient::getSourceFromPrefix(string prefix) {
     }
 }
 
-IrcUser *IrcClient::getUserFromNickName(string nickName) {
-    auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser *obj) {
+IrcUser* IrcClient::getUserFromNickName(string nickName) {
+    auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser* obj) {
         return _stricmp(obj->nickName.c_str(), nickName.c_str()) == 0;
     });
 
@@ -421,9 +421,9 @@ IrcUser *IrcClient::getUserFromNickName(string nickName) {
     return newUser;
 }
 
-IrcServer *IrcClient::getServerFromHostName(string hostName) {
+IrcServer* IrcClient::getServerFromHostName(string hostName) {
     auto server =
-        find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer *obj) {
+        find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer* obj) {
             return _stricmp(obj->hostName.c_str(), hostName.c_str());
         });
 
@@ -439,7 +439,7 @@ IrcServer *IrcClient::getServerFromHostName(string hostName) {
     return newServer;
 }
 
-const char *WSAFormatError(int errorCode) {
+const char* WSAFormatError(int errorCode) {
     LPSTR errString;
 
     int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |

@@ -76,9 +76,9 @@ class IrcClient : public EventEmitter {
     void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
     void sendMessagePong(std::string ping);
 
-    LibIrc::IrcMessageSource *getSourceFromPrefix(std::string prefix);
-    LibIrc::IrcUser *getUserFromNickName(std::string nickName);
-    LibIrc::IrcServer *getServerFromHostName(std::string hostName);
+    LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
+    LibIrc::IrcUser* getUserFromNickName(std::string nickName);
+    LibIrc::IrcServer* getServerFromHostName(std::string hostName);
 
     std::string hostName;
     int port;
@@ -87,8 +87,8 @@ class IrcClient : public EventEmitter {
     WSADATA wsaData;
     SOCKET socket;
 
-    std::vector<LibIrc::IrcUser *> users;
-    std::vector<LibIrc::IrcServer *> servers;
+    std::vector<LibIrc::IrcUser*> users;
+    std::vector<LibIrc::IrcServer*> servers;
 };
 
 } // namespace LibIrc
