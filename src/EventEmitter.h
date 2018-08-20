@@ -9,20 +9,20 @@
 
 struct EventListenerBase {
     EventListenerBase() {}
-    EventListenerBase(std::string name) : name(name) {}
+    EventListenerBase(const std::string name) : name(name) {}
     virtual ~EventListenerBase() {}
 
-    std::string name;
+    const std::string name;
 };
 
 template <typename... Args> struct EventListener : EventListenerBase {
     EventListener() {}
-    EventListener(std::string name, std::function<void(Args...)> handler)
+    EventListener(const std::string name, const std::function<void(Args...)> handler)
         : EventListenerBase(name), handler(handler) {}
 
     virtual ~EventListener() {}
 
-    std::function<void(Args...)> handler;
+    const std::function<void(Args...)> handler;
 };
 
 class EventEmitter {
@@ -30,16 +30,16 @@ class EventEmitter {
     EventEmitter();
     ~EventEmitter();
 
-    void on(std::string eventName, std::function<void()> handler);
+    void on(const std::string eventName, const std::function<void()> handler);
 
     template <typename... Args>
-    void on(std::string eventName, std::function<void(Args...)> handler);
+    void on(const std::string eventName, const std::function<void(Args...)> handler);
 
-    template <typename LambdaType> void on(std::string eventName, LambdaType lambda) {
+    template <typename LambdaType> void on(const std::string eventName, const LambdaType lambda) {
         this->on(eventName, make_function(lambda));
     }
 
-    template <typename... Args> void emit(std::string eventName, Args... args);
+    template <typename... Args> void emit(const std::string eventName, const Args... args);
 
   private:
     std::multimap<std::string, std::shared_ptr<EventListenerBase>> listeners;

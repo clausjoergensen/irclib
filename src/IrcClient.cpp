@@ -19,14 +19,15 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-const char* WSAFormatError(int errorCode);
+const char* WSAFormatError(const int errorCode);
 
-std::string& toUpperCase(std::string& str) {
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-    return str;
+const std::string toUpperCase(const std::string str) {
+    std::string tmp = str;
+    std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+    return tmp;
 }
 
-int getNumericUserMode(std::vector<char> modes) {
+const int getNumericUserMode(const std::vector<char> modes) {
     int value = 0;
     if (modes.empty()) {
         return value;
@@ -61,7 +62,7 @@ IrcClient::~IrcClient() {
     ::WSACleanup();
 }
 
-void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrationInfo) {
+void IrcClient::connect(const string hostName, const int port, const IrcRegistrationInfo registrationInfo) {
     this->hostName = hostName;
     this->port = port;
     this->registrationInfo = registrationInfo;
@@ -121,7 +122,7 @@ void IrcClient::connected() {
     this->users.push_back(localUser);
 }
 
-void IrcClient::listen(string remainder) {
+void IrcClient::listen(const string remainder) {
     const int receiveBufferLength = 256;
     char receiveBuffer[receiveBufferLength];
     int bytesRead;
@@ -160,10 +161,9 @@ void IrcClient::listen(string remainder) {
     }
 }
 
-void IrcClient::sendRawMessage(string message) {
-    message = message + "\r\n";
-
-    auto buffer = message.c_str();
+void IrcClient::sendRawMessage(const string message) {
+    auto formattedMessage = message + "\r\n";
+    auto buffer = formattedMessage.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
@@ -239,7 +239,7 @@ void IrcClient::sendRawMessage(string message) {
  *   special    =  %x5B-60 / %x7B-7D
  *                    ; "[", "]", "\", "`", "_", "^", "{", "|", "}"*
  */
-void IrcClient::parseMessage(string line) {
+void IrcClient::parseMessage(const string line) {
     string prefix;
     string lineAfterPrefix;
 
@@ -302,7 +302,7 @@ void IrcClient::parseMessage(string line) {
     this->processMessage(message);
 }
 
-void IrcClient::processMessage(IrcMessage message) {
+void IrcClient::processMessage(const IrcMessage message) {
     if (message.command == CMD_PING) {
         processMessagePing(message);
         return;
@@ -311,7 +311,8 @@ void IrcClient::processMessage(IrcMessage message) {
     this->emit("message", message);
 }
 
-void IrcClient::writeMessage(string prefix, string command, vector<string> parameters) {
+void IrcClient::writeMessage(const string prefix, const string command,
+                             const vector<string> parameters) {
     stringstream message;
 
     if (!prefix.empty()) {
@@ -334,7 +335,7 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
     this->writeMessage(message.str());
 }
 
-void IrcClient::writeMessage(string message) {
+void IrcClient::writeMessage(const string message) {
     if (message.empty()) {
         return;
     }
@@ -354,34 +355,34 @@ void IrcClient::writeMessage(string message) {
 
 // - Message Sending
 
-void IrcClient::sendMessagePassword(string password) {
+void IrcClient::sendMessagePassword(const string password) {
     this->writeMessage("", "PASS", { password });
 }
 
-void IrcClient::sendMessageNick(string nickName) {
+void IrcClient::sendMessageNick(const string nickName) {
     this->writeMessage("", "NICK", { nickName });
 }
 
-void IrcClient::sendMessageUser(string userName, string realName, vector<char> userModes) {
+void IrcClient::sendMessageUser(const string userName, const string realName,
+                                const vector<char> userModes) {
     int numericUserMode = getNumericUserMode(userModes);
     this->writeMessage("", "USER", { userName, to_string(numericUserMode), "*", realName });
 }
 
-void IrcClient::sendMessagePong(string ping) {
+void IrcClient::sendMessagePong(const string ping) {
     this->writeMessage("", "PONG", { ping });
 }
 
 // - Message Processing
 
-void IrcClient::processMessagePing(IrcMessage message) {
+void IrcClient::processMessagePing(const IrcMessage message) {
     assert(message.parameters.size() >= 1);
-
     this->sendMessagePong(message.parameters[0]);
 }
 
 // - Utils
 
-IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
+IrcMessageSource* IrcClient::getSourceFromPrefix(const string prefix) {
     auto dotIdx = prefix.find('.') + 1;
     auto bangIdx = prefix.find('!') + 1;
     auto atIdx = prefix.find('@', bangIdx) + 1;
@@ -408,7 +409,7 @@ IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
     }
 }
 
-IrcUser* IrcClient::getUserFromNickName(string nickName) {
+IrcUser* IrcClient::getUserFromNickName(const string nickName) {
     auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser* obj) {
         return _stricmp(obj->nickName.c_str(), nickName.c_str()) == 0;
     });
@@ -425,7 +426,7 @@ IrcUser* IrcClient::getUserFromNickName(string nickName) {
     return newUser;
 }
 
-IrcServer* IrcClient::getServerFromHostName(string hostName) {
+IrcServer* IrcClient::getServerFromHostName(const string hostName) {
     auto server =
         find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer* obj) {
             return _stricmp(obj->hostName.c_str(), hostName.c_str());
@@ -443,7 +444,7 @@ IrcServer* IrcClient::getServerFromHostName(string hostName) {
     return newServer;
 }
 
-const char* WSAFormatError(int errorCode) {
+const char* WSAFormatError(const int errorCode) {
     LPSTR errString;
 
     int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
