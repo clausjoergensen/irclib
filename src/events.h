@@ -30,8 +30,8 @@ template <typename... Args> struct EventListener : EventListenerBase {
 
 class EventEmitter {
   public:
-    EventEmitter();
-    ~EventEmitter();
+    EventEmitter() {}
+    ~EventEmitter() {}
 
     void on(const std::string event_name, const std::function<void()> handler);
 
@@ -62,13 +62,19 @@ class EventEmitter {
     }
 };
 
+inline void EventEmitter::on(const std::string eventName, std::function<void()> handler) {
+    this->listeners.insert(
+        std::make_pair(eventName, std::make_shared<EventListener<>>(eventName, handler)));
+}
+
 template <typename... Args>
 void EventEmitter::on(std::string event_name, std::function<void(Args...)> handler) {
     this->listeners.insert(
         std::make_pair(event_name, std::make_shared<EventListener<Args...>>(event_name, handler)));
 }
 
-template <typename... Args> void EventEmitter::emit(std::string event_name, Args... args) {
+template <typename... Args> 
+void EventEmitter::emit(std::string event_name, Args... args) {
     auto range = this->listeners.equal_range(event_name);
 
     std::list<std::shared_ptr<EventListener<Args...>>> listeners;
