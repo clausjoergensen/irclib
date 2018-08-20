@@ -116,9 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\IrcClient.h" />
+    <ClInclude Include="src\IrcCommand.h" />
+    <ClInclude Include="src\IrcError.h" />
     <ClInclude Include="src\IrcMessage.h" />
     <ClInclude Include="src\IrcMessageSource.h" />
     <ClInclude Include="src\IrcRegistrationInfo.h" />
+    <ClInclude Include="src\IrcReply.h" />
     <ClInclude Include="src\IrcServer.h" />
     <ClInclude Include="src\IrcUser.h" />
   </ItemGroup>

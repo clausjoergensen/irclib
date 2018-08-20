@@ -1,6 +1,9 @@
 // Copyright (c) 2018 Claus Jørgensen
 
 #include "IrcClient.h"
+#include "IrcCommand.h"
+#include "IrcReply.h"
+#include "IrcError.h"
 
 #include <locale>
 #include <algorithm>
@@ -14,7 +17,7 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-char* WSAFormatError(int errorCode);
+const char* WSAFormatError(int errorCode);
 
 std::string& toUpperCase(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
@@ -292,7 +295,7 @@ void IrcClient::parseMessage(string line) {
 }
 
 void IrcClient::processMessage(IrcMessage message) {
-    if (message.command == "PING") {
+    if (message.command == CMD_PING) {
         this->sendMessagePong(message.parameters[0]);
     }
 
@@ -413,7 +416,7 @@ IrcServer* IrcClient::getServerFromHostName(string hostName) {
     return newServer;
 }
 
-char* WSAFormatError(int errorCode) {
+const char* WSAFormatError(int errorCode) {
     LPSTR errString;
 
     int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -426,9 +429,7 @@ char* WSAFormatError(int errorCode) {
         0); // 0, since getting message from system tables
 
     if (size == 0) {
-        char errorCodeMessage[256];
-        sprintf_s(errorCodeMessage, 256, "Unknown Error Code (%d)", errorCode);
-        return errorCodeMessage;
+        return ("Unknown Error Code: " + to_string(errorCode)).c_str();
     }
 
     return errString;
