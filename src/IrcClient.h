@@ -62,6 +62,8 @@ public:
     void sendRawMessage(std::string message);
 
 private:
+    void listen(std::string remainder = "");
+
     void parseMessage(std::string line);
     void processMessage(LibIrc::IrcMessage message);
     void writeMessage(std::string prefix, std::string command, std::vector<std::string> parameters);

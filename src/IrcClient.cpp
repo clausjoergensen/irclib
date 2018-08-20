@@ -106,27 +106,41 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     this->users.push_back(localUser);
 
     // Start listen for input
-    const int receiveBufferLength = 512;
+    this->listen();
+}
+
+void IrcClient::listen(std::string remainder) {
+    const int receiveBufferLength = 256;
     char receiveBuffer[receiveBufferLength];
     int bytesRead;
 
-    do {
-        bytesRead = ::recv(this->socket, receiveBuffer, receiveBufferLength, 0);
-        if (bytesRead > 0) {
-            stringstream ss(string(receiveBuffer, bytesRead));
-            string line;
-            while (getline(ss, line)) {
-                // Remove \r as std::getline only splits on \n. IRC always uses \r\n.
-                line = line.substr(0, line.length() - 1);
+    bytesRead = ::recv(this->socket, receiveBuffer, receiveBufferLength, 0);
+    if (bytesRead > 0) {
+        auto receivedMessage = string(receiveBuffer, bytesRead);
 
-                this->parseMessage(line);
+        stringstream ss;
+        ss << remainder;
+        ss << receivedMessage;
+
+        string line;
+        while (getline(ss, line)) {
+            if (ss.eof()) {
+                listen(line);
+                return;
             }
-        } else if (bytesRead == 0) {
-            printf("Connection closed\r\n");
-        } else {
-            printf("recv failed: %d\n", WSAGetLastError());
+            
+            // Remove \r as std::getline only splits on \n. IRC always uses \r\n.
+            line = line.substr(0, line.length() - 1);
+
+            this->parseMessage(line);
         }
-    } while (bytesRead > 0);
+
+        this->listen();
+    } else if (bytesRead == 0) {
+        printf("Connection closed\r\n");
+    } else {
+        printf("recv failed: %d\n", WSAGetLastError());
+    }
 }
 
 void IrcClient::sendRawMessage(string message) {
