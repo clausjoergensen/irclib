@@ -152,9 +152,6 @@
     <ClCompile Include="test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\IrcClient.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="irclib.vcxproj">
       <Project>{7b377255-1cca-4d88-97ff-b52dca63006e}</Project>
     </ProjectReference>
