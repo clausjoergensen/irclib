@@ -14,13 +14,8 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-inline std::string toUpperCase(std::string str) {
+inline std::string& toUpperCase(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-    return str;
-}
-
-inline std::string toLowerCase(std::string str) {
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     return str;
 }
 
@@ -369,7 +364,7 @@ IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
 
 IrcUser* IrcClient::getUserFromNickName(string nickName) {
     auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser* obj) {
-        return toLowerCase(obj->nickName) == toLowerCase(nickName);
+        return _stricmp(obj->nickName.c_str(), nickName.c_str()) == 0;
     });
 
     if (user != this->users.end()) {
@@ -386,7 +381,7 @@ IrcUser* IrcClient::getUserFromNickName(string nickName) {
 
 IrcServer* IrcClient::getServerFromHostName(string hostName) {
     auto server = find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer* obj) {
-        return toLowerCase(obj->hostName) == toLowerCase(hostName);
+        return _stricmp(obj->hostName.c_str(), hostName.c_str());
     });
 
     if (server != this->servers.end()) {
