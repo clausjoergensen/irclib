@@ -132,13 +132,13 @@ void IrcClient::listen(const string remainder) {
     if (bytesRead > 0) {
         auto receivedMessage = string(receiveBuffer, bytesRead);
 
-        stringstream ss;
-        ss << remainder;
-        ss << receivedMessage;
+        stringstream lineStream;
+        lineStream << remainder;
+        lineStream << receivedMessage;
 
         string line;
-        while (getline(ss, line)) {
-            if (ss.eof()) {
+        while (getline(lineStream, line)) {
+            if (lineStream.eof()) {
                 listen(line); // String was incomplete line, prepend to next read.
                 return;
             }
@@ -384,26 +384,26 @@ void IrcClient::processMessagePing(const IrcMessage message) {
 // - Utils
 
 IrcMessageSource* IrcClient::getSourceFromPrefix(const string prefix) {
-    auto dotIdx = prefix.find('.') + 1;
-    auto bangIdx = prefix.find('!') + 1;
-    auto atIdx = prefix.find('@', bangIdx) + 1;
+    auto dotIndex = prefix.find('.') + 1;
+    auto bangIndex = prefix.find('!') + 1;
+    auto atIndex = prefix.find('@', bangIndex) + 1;
 
-    if (bangIdx > 0) {
-        auto nickName = prefix.substr(0, bangIdx - 1);
+    if (bangIndex > 0) {
+        auto nickName = prefix.substr(0, bangIndex - 1);
         auto user = this->getUserFromNickName(nickName);
-        if (atIdx > 0) {
-            user->userName = prefix.substr(bangIdx, atIdx - 1);
-            user->hostName = prefix.substr(atIdx);
+        if (atIndex > 0) {
+            user->userName = prefix.substr(bangIndex, atIndex - 1);
+            user->hostName = prefix.substr(atIndex);
         } else {
-            user->userName = prefix.substr(bangIdx);
+            user->userName = prefix.substr(bangIndex);
         }
         return user;
-    } else if (atIdx > 0) {
-        auto nickName = prefix.substr(0, atIdx - 1);
+    } else if (atIndex > 0) {
+        auto nickName = prefix.substr(0, atIndex - 1);
         auto user = this->getUserFromNickName(nickName);
-        user->hostName = prefix.substr(atIdx);
+        user->hostName = prefix.substr(atIndex);
         return user;
-    } else if (dotIdx > 0) {
+    } else if (dotIndex > 0) {
         return this->getServerFromHostName(prefix);
     } else {
         return this->getUserFromNickName(prefix);
