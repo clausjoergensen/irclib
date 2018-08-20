@@ -45,11 +45,11 @@ IrcClient::IrcClient() {
 
 IrcClient::~IrcClient() {
     if (this->socket != INVALID_SOCKET) {
-        closesocket(this->socket);
+        ::closesocket(this->socket);
         this->socket = INVALID_SOCKET;
     }
 
-    WSACleanup();
+    ::WSACleanup();
 }
 
 void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrationInfo) {
@@ -68,24 +68,24 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     int getAddrInfoResult = ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
     if (getAddrInfoResult != SUCCESS) {
         printf("Error: %s\n", gai_strerror(getAddrInfoResult));
-        WSACleanup();
+        ::WSACleanup();
         return;
     }
 
     this->socket = ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
     if (this->socket == INVALID_SOCKET) {
-        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
+        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         freeaddrinfo(&hints);
-        WSACleanup();
+        ::WSACleanup();
         return;
     }
 
     int connectResult = ::connect(this->socket, addressInfo->ai_addr, (int)addressInfo->ai_addrlen);
     if (connectResult == SOCKET_ERROR) {
-        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
-        closesocket(this->socket);
+        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        ::closesocket(this->socket);
         this->socket = INVALID_SOCKET;
-        WSACleanup();
+        ::WSACleanup();
         return;
     }
 
@@ -140,7 +140,7 @@ void IrcClient::listen(string remainder) {
     } else if (bytesRead == 0) {
         printf("Connection closed\r\n");
     } else {
-        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
+        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
     }
 }
 
@@ -150,9 +150,10 @@ void IrcClient::sendRawMessage(string message) {
     auto buffer = message.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {        
-        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
-        closesocket(this->socket);
-        WSACleanup();
+        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        ::closesocket(this->socket);
+        this->socket = INVALID_SOCKET;
+        ::WSACleanup();
         return;
     }
 }
@@ -319,9 +320,9 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
 
     int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (sendResult == SOCKET_ERROR) {
-        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
-        closesocket(this->socket);
-        WSACleanup();
+        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        ::closesocket(this->socket);
+        ::WSACleanup();
         return;
     }
 }
