@@ -16,7 +16,7 @@
 #define CMD_PART     "PART"
 #define CMD_KICK     "KICK"
 #define CMD_MODE     "MODE"
-#define CMD_TOPIC    "TOIPC"
+#define CMD_TOPIC    "TOPIC"
 #define CMD_WHO      "WHO"
 #define CMD_MOTD     "MOTD"
 #define CMD_RULES    "RULES"
