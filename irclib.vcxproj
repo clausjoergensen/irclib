@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\EventEmitter.h" />
     <ClInclude Include="src\IrcClient.h" />
     <ClInclude Include="src\IrcCommand.h" />
     <ClInclude Include="src\IrcError.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="src\IrcUser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EventEmitter.cpp" />
     <ClCompile Include="src\IrcClient.cpp" />
     <ClCompile Include="src\IrcServer.cpp" />
     <ClCompile Include="src\IrcUser.cpp" />

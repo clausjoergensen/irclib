@@ -5,6 +5,7 @@
 #include "IrcMessage.h"
 #include "IrcUser.h"
 #include "IrcServer.h"
+#include "EventEmitter.h"
 
 #include <string>
 #include <vector>
@@ -28,7 +29,7 @@ namespace LibIrc {
 /**
  * Represents a client that communicates with a server using the IRC (Internet Relay Chat) protocol.
  */
-class IrcClient {
+class IrcClient : public EventEmitter {
 public:
     /**
      * Initializes a new instance of the IrcClient class.
@@ -39,11 +40,6 @@ public:
      * Tears down the connection if open.
      */
     ~IrcClient();
-
-    /**
-     * Callback for when the IrcClients receives a new message.
-     */
-    std::function<void(IrcMessage)> onMessage;
 
     /**
      * Connects to the specified server.

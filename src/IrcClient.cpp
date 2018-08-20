@@ -300,9 +300,7 @@ void IrcClient::processMessage(IrcMessage message) {
         return;
     }
 
-    if (this->onMessage != nullptr) {
-        this->onMessage(message);
-    }
+    this->emit("message", message);
 }
 
 void IrcClient::writeMessage(string prefix, string command, vector<string> parameters) {

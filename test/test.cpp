@@ -17,9 +17,9 @@ int main() {
 
     std::unique_ptr<IrcClient> client(new IrcClient());
     std::thread t([&client, &registrationInfo] {
-        client->onMessage = [](const IrcMessage message) {
+        client->on("message", [](const IrcMessage message) {
             std::cout << message.raw << "\r\n";
-        };
+        });
         client->connect("localhost", 6667, registrationInfo);
     });
 
