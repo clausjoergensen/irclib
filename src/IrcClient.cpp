@@ -305,26 +305,33 @@ void IrcClient::processMessage(IrcMessage message) {
 }
 
 void IrcClient::writeMessage(string prefix, string command, vector<string> parameters) {
-    stringstream ss;
+    stringstream message;
 
     if (!prefix.empty()) {
-        ss << ": " << prefix << " ";
+        message << ": " << prefix << " ";
     }
 
-    ss << command;
+    message << command;
 
     size_t n = parameters.size();
     for (int i = 0; i < n - 1; i++) {
-        ss << " " << parameters[i];
+        message << " " << parameters[i];
     }
 
     if (n > 0) {
-        ss << " :" << parameters[n - 1];
+        message << " :" << parameters[n - 1];
     }
 
-    ss << "\r\n";
+    message << "\r\n";
 
-    auto message = ss.str();
+    this->writeMessage(message.str());
+}
+
+void IrcClient::writeMessage(string message) {
+    if (message.empty()) {
+        return;
+    }
+
     auto buffer = message.c_str();
 
     int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);

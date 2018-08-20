@@ -67,6 +67,8 @@ private:
 
     void parseMessage(std::string line);
     void processMessage(LibIrc::IrcMessage message);
+    
+    void writeMessage(std::string message);
     void writeMessage(std::string prefix, std::string command, std::vector<std::string> parameters);
 
     void sendMessagePassword(std::string password);
