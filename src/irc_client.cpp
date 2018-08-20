@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cassert>
 #include <locale>
+#include <mutex>
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -118,6 +119,9 @@ void IrcClient::connected() {
     local_user->username = this->registration_info.username;
 
     this->local_user = local_user;
+
+    std::lock_guard<std::mutex> lock(mutex);
+
     this->users.push_back(local_user);
 }
 
@@ -409,6 +413,8 @@ IrcMessageSource* IrcClient::getSourceFromPrefix(const string prefix) {
 }
 
 IrcUser* IrcClient::getUserFromNickName(const string nickname) {
+    std::lock_guard<std::mutex> lock(mutex);
+
     auto user = find_if(this->users.begin(), this->users.end(), [&nickname](const IrcUser* obj) {
         return _stricmp(obj->nickname.c_str(), nickname.c_str()) == 0;
     });
@@ -424,6 +430,8 @@ IrcUser* IrcClient::getUserFromNickName(const string nickname) {
 }
 
 IrcServer* IrcClient::getServerFromHostName(const string hostname) {
+    std::lock_guard<std::mutex> lock(mutex);
+
     auto server =
         find_if(this->servers.begin(), this->servers.end(), [&hostname](const IrcServer* obj) {
             return _stricmp(obj->hostname.c_str(), hostname.c_str());

@@ -47,6 +47,12 @@ class IrcClient : public events::EventEmitter {
         return this->local_user;
     }
 
+    // Delete copy constructor as this class uses a mutex internally.
+    IrcClient(const IrcClient&) = delete;
+    
+    // Delete copy operator as this class uses a mutex internally.
+    const IrcClient& operator=(const IrcClient&) = delete;
+
   private:
     void connected();
     void listen(const std::string remainder = "");
@@ -77,6 +83,8 @@ class IrcClient : public events::EventEmitter {
 
     ::WSADATA wsadata;
     ::SOCKET socket;
+
+    std::mutex mutex;
 
     std::vector<irclib::IrcUser*> users;
     std::vector<irclib::IrcServer*> servers;

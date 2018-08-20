@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <mutex>
 
 namespace events {
 
@@ -44,8 +45,12 @@ class EventEmitter {
 
     template <typename... Args> void emit(const std::string event_name, const Args... args);
 
+    EventEmitter(const EventEmitter&) = delete;
+    const EventEmitter& operator=(const EventEmitter&) = delete;
+
   private:
     std::multimap<std::string, std::shared_ptr<EventListenerBase>> listeners;
+    std::mutex mutex;
 
     // http://stackoverflow.com/a/21000981
 
@@ -62,27 +67,28 @@ class EventEmitter {
     }
 };
 
-inline void EventEmitter::on(const std::string eventName, std::function<void()> handler) {
-    this->listeners.insert(
-        std::make_pair(eventName, std::make_shared<EventListener<>>(eventName, handler)));
-}
-
 template <typename... Args>
 void EventEmitter::on(std::string event_name, std::function<void(Args...)> handler) {
+    std::lock_guard<std::mutex> lock(mutex);
     this->listeners.insert(
         std::make_pair(event_name, std::make_shared<EventListener<Args...>>(event_name, handler)));
 }
 
 template <typename... Args> 
-void EventEmitter::emit(std::string event_name, Args... args) {
-    auto range = this->listeners.equal_range(event_name);
+void EventEmitter::emit(std::string event_name, Args... args) {    
+    std::list<std::shared_ptr<EventListener<Args...>>> listeners;   
+    
+    {
+        std::lock_guard<std::mutex> lock(mutex);
 
-    std::list<std::shared_ptr<EventListener<Args...>>> listeners;
-    listeners.resize(std::distance(range.first, range.second));
+        auto range = this->listeners.equal_range(event_name);
 
-    std::transform(range.first, range.second, listeners.begin(), [](auto pair) {
-        return std::dynamic_pointer_cast<EventListener<Args...>>(pair.second);
-    });
+        listeners.resize(std::distance(range.first, range.second));
+
+        std::transform(range.first, range.second, listeners.begin(), [](auto pair) {
+            return std::dynamic_pointer_cast<EventListener<Args...>>(pair.second);
+        });
+    }
 
     for (auto& listener : listeners) {
         listener->handler(args...);
