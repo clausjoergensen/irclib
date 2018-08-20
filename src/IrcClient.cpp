@@ -1,5 +1,7 @@
 // Copyright (c) 2018 Claus Jørgensen
 
+#include "stdafx.h"
+
 #include "IrcClient.h"
 #include "IrcCommand.h"
 #include "IrcError.h"
@@ -114,6 +116,8 @@ void IrcClient::connected() {
     auto localUser = new IrcLocalUser();
     localUser->nickName = registrationInfo.nickName;
     localUser->userName = registrationInfo.userName;
+
+    this->localUser = localUser;
     this->users.push_back(localUser);
 }
 
@@ -169,6 +173,10 @@ void IrcClient::sendRawMessage(string message) {
         ::WSACleanup();
         return;
     }
+}
+
+IrcLocalUser* IrcClient::getLocalUser() {
+    return this->localUser;
 }
 
 /**

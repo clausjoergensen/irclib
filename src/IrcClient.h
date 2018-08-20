@@ -1,6 +1,8 @@
 // Copyright (c) 2018 Claus Jørgensen
 #pragma once
 
+#include "stdafx.h"
+
 #include "EventEmitter.h"
 #include "IrcMessage.h"
 #include "IrcRegistrationInfo.h"
@@ -13,16 +15,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <iphlpapi.h>
-#include <stdio.h>
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 
 namespace LibIrc {
 
@@ -59,6 +51,11 @@ class IrcClient : public EventEmitter {
      */
     void sendRawMessage(std::string message);
 
+    /**
+     * Gets the local user (or a nullptr before registering).
+     */
+    IrcLocalUser* getLocalUser();
+
   private:
     void connected();
     void listen(std::string remainder = "");
@@ -83,6 +80,7 @@ class IrcClient : public EventEmitter {
     std::string hostName;
     int port;
     LibIrc::IrcRegistrationInfo registrationInfo;
+    LibIrc::IrcLocalUser* localUser;
 
     WSADATA wsaData;
     SOCKET socket;
