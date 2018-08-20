@@ -48,7 +48,9 @@ IrcClient::~IrcClient() {
     this->servers.clear();
 
     if (this->socket != INVALID_SOCKET) {
-        ::closesocket(this->socket);
+        if (::closesocket(this->socket) != SUCCESS) {
+            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        }
     }
 
     ::WSACleanup();
@@ -85,7 +87,9 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     int connectResult = ::connect(this->socket, addressInfo->ai_addr, (int)addressInfo->ai_addrlen);
     if (connectResult == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
-        ::closesocket(this->socket);
+        if (::closesocket(this->socket) != SUCCESS) {
+            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        }
         ::WSACleanup();
         return;
     }
@@ -152,8 +156,9 @@ void IrcClient::sendRawMessage(string message) {
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {        
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
-        ::closesocket(this->socket);
-        this->socket = INVALID_SOCKET;
+        if (::closesocket(this->socket) != SUCCESS) {
+            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        }
         ::WSACleanup();
         return;
     }
@@ -322,7 +327,9 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
     int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (sendResult == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
-        ::closesocket(this->socket);
+        if (::closesocket(this->socket) != SUCCESS) {
+            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        }
         ::WSACleanup();
         return;
     }
