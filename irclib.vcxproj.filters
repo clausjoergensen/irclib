@@ -17,9 +17,6 @@
     <ClInclude Include="src\IrcMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcMessageSource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\IrcRegistrationInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
