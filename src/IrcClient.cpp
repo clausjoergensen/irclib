@@ -75,10 +75,9 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     }
 
     this->socket = ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
-    freeaddrinfo(&hints);
-
     if (this->socket == INVALID_SOCKET) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        freeaddrinfo(&hints);
         ::WSACleanup();
         return;
     }
