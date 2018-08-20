@@ -54,7 +54,9 @@ class IrcClient : public EventEmitter {
     /**
      * Gets the local user (or a nullptr before registering).
      */
-    IrcLocalUser* getLocalUser();
+    IrcLocalUser* getLocalUser() {
+        return this->localUser;
+    }
 
   private:
     void connected();

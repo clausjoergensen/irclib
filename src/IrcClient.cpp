@@ -175,10 +175,6 @@ void IrcClient::sendRawMessage(string message) {
     }
 }
 
-IrcLocalUser* IrcClient::getLocalUser() {
-    return this->localUser;
-}
-
 /**
  * The extracted message is parsed into the components <prefix>,
  * <command> and list of parameters (<params>).
