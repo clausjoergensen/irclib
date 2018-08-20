@@ -5,8 +5,6 @@
 using namespace std;
 using namespace LibIrc;
 
-IrcServer::IrcServer() {
-}
+IrcServer::IrcServer() {}
 
-IrcServer::~IrcServer() {
-}
+IrcServer::~IrcServer() {}

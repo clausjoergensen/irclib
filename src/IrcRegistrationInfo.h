@@ -14,4 +14,4 @@ struct IrcRegistrationInfo {
     std::vector<char> userModes;
 };
 
-}
+} // namespace LibIrc

@@ -2,12 +2,12 @@
 
 #include "IrcClient.h"
 #include "IrcCommand.h"
-#include "IrcReply.h"
 #include "IrcError.h"
+#include "IrcReply.h"
 
-#include <locale>
 #include <algorithm>
 #include <cassert>
+#include <locale>
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -17,9 +17,9 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-const char* WSAFormatError(int errorCode);
+const char *WSAFormatError(int errorCode);
 
-std::string& toUpperCase(std::string& str) {
+std::string &toUpperCase(std::string &str) {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
     return str;
 }
@@ -72,14 +72,16 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    int getAddrInfoResult = ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
+    int getAddrInfoResult =
+        ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
     if (getAddrInfoResult != SUCCESS) {
         printf("Error: %s\n", gai_strerror(getAddrInfoResult));
         ::WSACleanup();
         return;
     }
 
-    this->socket = ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
+    this->socket =
+        ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
     if (this->socket == INVALID_SOCKET) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         freeaddrinfo(&hints);
@@ -106,7 +108,8 @@ void IrcClient::connected() {
         this->sendMessagePassword(registrationInfo.password);
     }
     this->sendMessageNick(registrationInfo.nickName);
-    this->sendMessageUser(registrationInfo.userName, registrationInfo.realName, registrationInfo.userModes);
+    this->sendMessageUser(registrationInfo.userName, registrationInfo.realName,
+                          registrationInfo.userModes);
 
     auto localUser = new IrcLocalUser();
     localUser->nickName = registrationInfo.nickName;
@@ -138,7 +141,8 @@ void IrcClient::listen(string remainder) {
                 return;
             }
 
-            // Remove \r as std::getline only splits on \n. IRC always uses \r\n.
+            // Remove \r as std::getline only splits on \n. IRC always uses
+            // \r\n.
             line = line.substr(0, line.length() - 1);
 
             this->parseMessage(line);
@@ -245,7 +249,7 @@ void IrcClient::parseMessage(string line) {
 
     size_t spaceIndex = lineAfterPrefix.find(" ");
     if (spaceIndex == std::string::npos) {
-        // This is unexpected, but will cause a index-out-of-range assertion 
+        // This is unexpected, but will cause a index-out-of-range assertion
         // if invalid input is provided to parseMessage(..)
         return;
     }
@@ -373,7 +377,7 @@ void IrcClient::processMessagePing(IrcMessage message) {
 
 // - Utils
 
-IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
+IrcMessageSource *IrcClient::getSourceFromPrefix(string prefix) {
     auto dotIdx = prefix.find('.') + 1;
     auto bangIdx = prefix.find('!') + 1;
     auto atIdx = prefix.find('@', bangIdx) + 1;
@@ -400,8 +404,8 @@ IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
     }
 }
 
-IrcUser* IrcClient::getUserFromNickName(string nickName) {
-    auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser* obj) {
+IrcUser *IrcClient::getUserFromNickName(string nickName) {
+    auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser *obj) {
         return _stricmp(obj->nickName.c_str(), nickName.c_str()) == 0;
     });
 
@@ -417,10 +421,11 @@ IrcUser* IrcClient::getUserFromNickName(string nickName) {
     return newUser;
 }
 
-IrcServer* IrcClient::getServerFromHostName(string hostName) {
-    auto server = find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer* obj) {
-        return _stricmp(obj->hostName.c_str(), hostName.c_str());
-    });
+IrcServer *IrcClient::getServerFromHostName(string hostName) {
+    auto server =
+        find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer *obj) {
+            return _stricmp(obj->hostName.c_str(), hostName.c_str());
+        });
 
     if (server != this->servers.end()) {
         return *server;
@@ -434,17 +439,17 @@ IrcServer* IrcClient::getServerFromHostName(string hostName) {
     return newServer;
 }
 
-const char* WSAFormatError(int errorCode) {
+const char *WSAFormatError(int errorCode) {
     LPSTR errString;
 
     int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-        FORMAT_MESSAGE_FROM_SYSTEM, // windows internal message table
-        0, // 0, since source is internal message table
-        errorCode, // error code returned by WSAGetLastError()
-        0, // 0, auto-determine which language to use.
-        (LPSTR)&errString,
-        0, // buffer minimum size.
-        0); // 0, since getting message from system tables
+                                 FORMAT_MESSAGE_FROM_SYSTEM, // windows internal message table
+                             0,         // 0, since source is internal message table
+                             errorCode, // error code returned by WSAGetLastError()
+                             0,         // 0, auto-determine which language to use.
+                             (LPSTR)&errString,
+                             0,  // buffer minimum size.
+                             0); // 0, since getting message from system tables
 
     if (size == 0) {
         return ("Unknown Error Code: " + to_string(errorCode)).c_str();

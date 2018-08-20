@@ -6,7 +6,7 @@
 namespace LibIrc {
 
 class IrcUser : public IrcMessageSource {
-public:
+  public:
     IrcUser();
     ~IrcUser();
 
@@ -24,13 +24,14 @@ public:
 };
 
 class IrcLocalUser : public IrcUser {
-public:
+  public:
     IrcLocalUser();
     ~IrcLocalUser();
-public:
+
+  public:
     bool isLocalUser() {
         return true;
     }
 };
 
-}
+} // namespace LibIrc

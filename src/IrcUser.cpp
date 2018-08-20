@@ -5,14 +5,10 @@
 using namespace std;
 using namespace LibIrc;
 
-IrcUser::IrcUser() {
-}
+IrcUser::IrcUser() {}
 
-IrcUser::~IrcUser() {
-}
+IrcUser::~IrcUser() {}
 
-IrcLocalUser::IrcLocalUser() {
-}
+IrcLocalUser::IrcLocalUser() {}
 
-IrcLocalUser::~IrcLocalUser() {
-}
+IrcLocalUser::~IrcLocalUser() {}

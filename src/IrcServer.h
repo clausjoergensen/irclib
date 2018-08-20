@@ -6,7 +6,7 @@
 namespace LibIrc {
 
 class IrcServer : public IrcMessageSource {
-public:
+  public:
     IrcServer();
     ~IrcServer();
 
@@ -17,4 +17,4 @@ public:
     }
 };
 
-}
+} // namespace LibIrc

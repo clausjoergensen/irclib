@@ -6,8 +6,8 @@
 namespace LibIrc {
 
 class IrcMessageSource {
-public:
+  public:
     virtual std::string getName() = 0;
 };
 
-}
+} // namespace LibIrc

@@ -1,8 +1,8 @@
 // Copyright (c) 2018 Claus Jørgensen
 
 #include "../src/IrcClient.h"
-#include <thread>
 #include <crtdbg.h>
+#include <thread>
 
 using namespace std;
 using namespace LibIrc;
@@ -17,9 +17,7 @@ int main() {
 
     std::unique_ptr<IrcClient> client(new IrcClient());
     std::thread t([&client, &registrationInfo] {
-        client->on("message", [](const IrcMessage message) {
-            std::cout << message.raw << "\r\n";
-        });
+        client->on("message", [](const IrcMessage message) { std::cout << message.raw << "\r\n"; });
         client->connect("localhost", 6667, registrationInfo);
     });
 
@@ -34,7 +32,6 @@ int main() {
             break;
         }
     } while (true);
-
 
     return 0;
 }

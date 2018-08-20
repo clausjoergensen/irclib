@@ -1,41 +1,32 @@
-// Copyright (c) 2018 Claus Jørgensen
+// Copyright (c) 2018 Claus JÃ¸rgensen
 #pragma once
 
-#include <string>
-#include <vector>
-#include <map>
 #include <functional>
 #include <list>
+#include <map>
+#include <string>
+#include <vector>
 
 struct EventListenerBase {
     EventListenerBase() {}
-
-    EventListenerBase(std::string name)
-        : name(name) {
-    }
-
-    virtual ~EventListenerBase() {
-    }
+    EventListenerBase(std::string name) : name(name) {}
+    virtual ~EventListenerBase() {}
 
     std::string name;
 };
 
-template <typename... Args>
-struct EventListener : EventListenerBase {
+template <typename... Args> struct EventListener : EventListenerBase {
     EventListener() {}
-
     EventListener(std::string name, std::function<void(Args...)> handler)
-        : EventListenerBase(name), handler(handler) {
-    }
+        : EventListenerBase(name), handler(handler) {}
 
-    virtual ~EventListener() {
-    }
+    virtual ~EventListener() {}
 
     std::function<void(Args...)> handler;
 };
 
 class EventEmitter {
-public:
+  public:
     EventEmitter();
     ~EventEmitter();
 
@@ -44,45 +35,37 @@ public:
     template <typename... Args>
     void on(std::string eventName, std::function<void(Args...)> handler);
 
-    template<typename LambdaType>
-    void on(std::string eventName, LambdaType lambda) {
+    template <typename LambdaType> void on(std::string eventName, LambdaType lambda) {
         this->on(eventName, make_function(lambda));
     }
 
-    template <typename... Args>
-    void emit(std::string eventName, Args... args);
+    template <typename... Args> void emit(std::string eventName, Args... args);
 
-private:
+  private:
     std::multimap<std::string, std::shared_ptr<EventListenerBase>> listeners;
 
     // http://stackoverflow.com/a/21000981
 
     template <typename T>
-    struct function_traits
-        : public function_traits<decltype(&T::operator())> {
-    };
+    struct function_traits : public function_traits<decltype(&T::operator())> {};
 
     template <typename ClassType, typename ReturnType, typename... Args>
-    struct function_traits<ReturnType(ClassType::*)(Args...) const> {
+    struct function_traits<ReturnType (ClassType::*)(Args...) const> {
         typedef std::function<ReturnType(Args...)> f_type;
     };
 
-    template <typename L>
-    typename function_traits<L>::f_type make_function(L l) {
+    template <typename L> typename function_traits<L>::f_type make_function(L l) {
         return (typename function_traits<L>::f_type)(l);
     }
 };
 
-
 template <typename... Args>
 void EventEmitter::on(std::string eventName, std::function<void(Args...)> handler) {
     this->listeners.insert(
-        std::make_pair(eventName, std::make_shared<EventListener<Args...>>(eventName, handler))
-    );
+        std::make_pair(eventName, std::make_shared<EventListener<Args...>>(eventName, handler)));
 }
 
-template <typename... Args>
-void EventEmitter::emit(std::string eventName, Args... args) {
+template <typename... Args> void EventEmitter::emit(std::string eventName, Args... args) {
     auto range = this->listeners.equal_range(eventName);
 
     std::list<std::shared_ptr<EventListener<Args...>>> listeners;
@@ -92,7 +75,7 @@ void EventEmitter::emit(std::string eventName, Args... args) {
         return std::dynamic_pointer_cast<EventListener<Args...>>(pair.second);
     });
 
-    for (auto& listener : listeners) {
+    for (auto &listener : listeners) {
         listener->handler(args...);
     }
 }

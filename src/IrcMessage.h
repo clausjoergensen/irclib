@@ -18,4 +18,4 @@ struct IrcMessage {
     std::string raw;
 };
 
-}
+} // namespace LibIrc

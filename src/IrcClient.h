@@ -1,36 +1,37 @@
 // Copyright (c) 2018 Claus Jørgensen
 #pragma once
 
-#include "IrcRegistrationInfo.h"
-#include "IrcMessage.h"
-#include "IrcUser.h"
-#include "IrcServer.h"
 #include "EventEmitter.h"
+#include "IrcMessage.h"
+#include "IrcRegistrationInfo.h"
+#include "IrcServer.h"
+#include "IrcUser.h"
 
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
 #include <functional>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#include <iphlpapi.h>
+#include <stdio.h>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <iphlpapi.h>
-#include <stdio.h>
 
 namespace LibIrc {
 
 /**
- * Represents a client that communicates with a server using the IRC (Internet Relay Chat) protocol.
+ * Represents a client that communicates with a server using the IRC (Internet
+ * Relay Chat) protocol.
  */
 class IrcClient : public EventEmitter {
-public:
+  public:
     /**
      * Initializes a new instance of the IrcClient class.
      */
@@ -53,11 +54,12 @@ public:
     /**
      * Sends the specified raw message to the server.
      *
-     * \param message The text (single line) of the message to send the server. No CR/LF should be appended.
+     * \param message The text (single line) of the message to send the server.
+     * No CR/LF should be appended.
      */
     void sendRawMessage(std::string message);
 
-private:
+  private:
     void connected();
     void listen(std::string remainder = "");
 
@@ -74,9 +76,9 @@ private:
     void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
     void sendMessagePong(std::string ping);
 
-    LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
-    LibIrc::IrcUser* getUserFromNickName(std::string nickName);
-    LibIrc::IrcServer* getServerFromHostName(std::string hostName);
+    LibIrc::IrcMessageSource *getSourceFromPrefix(std::string prefix);
+    LibIrc::IrcUser *getUserFromNickName(std::string nickName);
+    LibIrc::IrcServer *getServerFromHostName(std::string hostName);
 
     std::string hostName;
     int port;
@@ -85,8 +87,8 @@ private:
     WSADATA wsaData;
     SOCKET socket;
 
-    std::vector<LibIrc::IrcUser*> users;
-    std::vector<LibIrc::IrcServer*> servers;
+    std::vector<LibIrc::IrcUser *> users;
+    std::vector<LibIrc::IrcServer *> servers;
 };
 
-}
+} // namespace LibIrc
