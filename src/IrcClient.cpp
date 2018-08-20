@@ -128,7 +128,7 @@ void IrcClient::listen(std::string remainder) {
                 listen(line);
                 return;
             }
-            
+
             // Remove \r as std::getline only splits on \n. IRC always uses \r\n.
             line = line.substr(0, line.length() - 1);
 
