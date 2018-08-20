@@ -1,19 +1,18 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #include <crtdbg.h>
+#include <iomanip>
 #include <thread>
 #include <time.h>
-#include <iomanip>
 
 #include "../src/irc_client.h"
-#include "../src/irc_replies.h"
 #include "../src/irc_commands.h"
 #include "../src/irc_errors.h"
+#include "../src/irc_replies.h"
 
 using namespace std;
 using namespace irclib;
 
-int getConsolePositionY()
-{
+int getConsolePositionY() {
     HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info;
     GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
@@ -73,15 +72,13 @@ int main() {
             } else if (message.command == RPL_LUSERME) {
                 std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
             } else if (message.command == RPL_LOCALUSERS) {
-                std::cout << "[" << timestamp << "] " 
-                          << "Current local  users:" << message.parameters[1] 
-                          << " Max: " << message.parameters[2]
-                          << "\r\n";
+                std::cout << "[" << timestamp << "] "
+                          << "Current local  users:" << message.parameters[1]
+                          << " Max: " << message.parameters[2] << "\r\n";
             } else if (message.command == RPL_GLOBALUSERS) {
-                std::cout << "[" << timestamp << "] " 
+                std::cout << "[" << timestamp << "] "
                           << "Current global users: " << message.parameters[1]
-                          << " Max: " << message.parameters[2]
-                          << "\r\n-\r\n";
+                          << " Max: " << message.parameters[2] << "\r\n-\r\n";
             } else if (message.command == RPL_MOTDSTART) {
                 std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n-\r\n";
             } else if (message.command == RPL_MOTD) {
@@ -90,52 +87,45 @@ int main() {
                 std::cout << "-\r\n";
                 std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n-\r\n";
             } else if (message.command == CMD_MODE) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.parameters[0] << " sets mode " 
-                          << message.parameters[1] 
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.parameters[0] << " sets mode " << message.parameters[1]
                           << "\r\n-\r\n";
             } else if (message.command == CMD_JOIN) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.source->getName() << " joined " 
-                          << message.parameters[0]
-                          << "\r\n";
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.source->getName() << " joined "
+                          << message.parameters[0] << "\r\n";
             } else if (message.command == CMD_PART) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.source->getName() << " left " 
-                          << message.parameters[0]
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.source->getName() << " left " << message.parameters[0]
                           << "\r\n";
             } else if (message.command == RPL_TOPIC) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.parameters[1] << ": " 
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.parameters[1] << ": "
                           << "Topic is: '" << message.parameters[0] << "'"
                           << "\r\n";
             } else if (message.command == CMD_TOPIC) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.parameters[0] << ": "  
-                          << message.source->getName()
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.parameters[0] << ": " << message.source->getName()
                           << " changed the topic to '" << message.parameters[1] << "'"
                           << "\r\n";
             } else if (message.command == RPL_TOPICWHOTIME) {
-                std::cout << "[" << timestamp << "] " 
-                          << "* " << message.parameters[1] << ": " 
-                          << "Set by " << message.parameters[2]
-                          << " on " << message.parameters[3]
+                std::cout << "[" << timestamp << "] "
+                          << "* " << message.parameters[1] << ": "
+                          << "Set by " << message.parameters[2] << " on " << message.parameters[3]
                           << "\r\n";
             } else if (message.command == RPL_NAMREPLY) {
                 // Ignored
             } else if (message.command == RPL_ENDOFNAMES) {
                 // Ignored
             } else if (message.command == CMD_PRIVMSG) {
-                std::cout << "[" << timestamp << "] " 
-                          << message.parameters[0] << ": " 
-                          << "<" << message.source->getName() << "> "
-                          << message.parameters[1]
+                std::cout << "[" << timestamp << "] " << message.parameters[0] << ": "
+                          << "<" << message.source->getName() << "> " << message.parameters[1]
                           << "\r\n";
             } else {
                 auto numericError = atoi(message.command.c_str());
                 if (numericError >= 400 && numericError <= 599) {
                     if (numericError == ERR_UNKNOWNCOMMAND) {
-                        std::cout << "[" << timestamp << "] Unknown command\r\n"; 
+                        std::cout << "[" << timestamp << "] Unknown command\r\n";
                     } else {
                         std::cout << "[" << timestamp << "] ERROR (" << numericError << ")\r\n";
                     }
