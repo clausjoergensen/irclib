@@ -37,12 +37,12 @@ class IrcClient : public EventEmitter {
     /**
      * Connects to the specified server.
      *
-     * \param hostName The name of the remote host.
+     * \param hostname The name of the remote host.
      * \param port The port number of the remote host.
-     * \param registrationInfo The information used for registering the client.
+     * \param registration_info The information used for registering the client.
      */
-    void connect(const std::string hostNameconst, const int port,
-                 const LibIrc::IrcRegistrationInfo registrationInfo);
+    void connect(const std::string hostname, const int port,
+                 const LibIrc::IrcRegistrationInfo registration_info);
 
     /**
      * Sends the specified raw message to the server.
@@ -56,7 +56,7 @@ class IrcClient : public EventEmitter {
      * Gets the local user (or a nullptr before registering).
      */
     const LibIrc::IrcLocalUser* getLocalUser() {
-        return this->localUser;
+        return this->local_user;
     }
 
   private:
@@ -73,21 +73,21 @@ class IrcClient : public EventEmitter {
                       const std::vector<std::string> parameters);
 
     void sendMessagePassword(const std::string password);
-    void sendMessageNick(const std::string nickName);
-    void sendMessageUser(const std::string userName, const std::string realName,
-                         const std::vector<char> userModes);
+    void sendMessageNick(const std::string nickname);
+    void sendMessageUser(const std::string username, const std::string realname,
+                         const std::vector<char> user_modes);
     void sendMessagePong(const std::string ping);
 
     LibIrc::IrcMessageSource* getSourceFromPrefix(const std::string prefix);
-    LibIrc::IrcUser* getUserFromNickName(const std::string nickName);
-    LibIrc::IrcServer* getServerFromHostName(const std::string hostName);
+    LibIrc::IrcUser* getUserFromNickName(const std::string nickname);
+    LibIrc::IrcServer* getServerFromHostName(const std::string hostname);
 
-    std::string hostName;
+    std::string hostname;
     int port;
-    LibIrc::IrcRegistrationInfo registrationInfo;
-    LibIrc::IrcLocalUser* localUser;
+    LibIrc::IrcRegistrationInfo registration_info;
+    LibIrc::IrcLocalUser* local_user;
 
-    ::WSADATA wsaData;
+    ::WSADATA wsadata;
     ::SOCKET socket;
 
     std::vector<LibIrc::IrcUser*> users;

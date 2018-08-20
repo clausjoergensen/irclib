@@ -9,16 +9,18 @@
 
 struct EventListenerBase {
     EventListenerBase() {}
-    EventListenerBase(const std::string name) : name(name) {}
+    EventListenerBase(const std::string event_name) : event_name(event_name) {
+    }
     virtual ~EventListenerBase() {}
 
-    const std::string name;
+    const std::string event_name;
 };
 
 template <typename... Args> struct EventListener : EventListenerBase {
     EventListener() {}
-    EventListener(const std::string name, const std::function<void(Args...)> handler)
-        : EventListenerBase(name), handler(handler) {}
+    EventListener(const std::string event_name, const std::function<void(Args...)> handler)
+        : EventListenerBase(event_name), handler(handler) {
+    }
 
     virtual ~EventListener() {}
 
@@ -30,16 +32,16 @@ class EventEmitter {
     EventEmitter();
     ~EventEmitter();
 
-    void on(const std::string eventName, const std::function<void()> handler);
+    void on(const std::string event_name, const std::function<void()> handler);
 
     template <typename... Args>
-    void on(const std::string eventName, const std::function<void(Args...)> handler);
+    void on(const std::string event_name, const std::function<void(Args...)> handler);
 
-    template <typename LambdaType> void on(const std::string eventName, const LambdaType lambda) {
-        this->on(eventName, make_function(lambda));
+    template <typename LambdaType> void on(const std::string event_name, const LambdaType lambda) {
+        this->on(event_name, make_function(lambda));
     }
 
-    template <typename... Args> void emit(const std::string eventName, const Args... args);
+    template <typename... Args> void emit(const std::string event_name, const Args... args);
 
   private:
     std::multimap<std::string, std::shared_ptr<EventListenerBase>> listeners;
@@ -60,13 +62,13 @@ class EventEmitter {
 };
 
 template <typename... Args>
-void EventEmitter::on(std::string eventName, std::function<void(Args...)> handler) {
+void EventEmitter::on(std::string event_name, std::function<void(Args...)> handler) {
     this->listeners.insert(
-        std::make_pair(eventName, std::make_shared<EventListener<Args...>>(eventName, handler)));
+        std::make_pair(event_name, std::make_shared<EventListener<Args...>>(event_name, handler)));
 }
 
-template <typename... Args> void EventEmitter::emit(std::string eventName, Args... args) {
-    auto range = this->listeners.equal_range(eventName);
+template <typename... Args> void EventEmitter::emit(std::string event_name, Args... args) {
+    auto range = this->listeners.equal_range(event_name);
 
     std::list<std::shared_ptr<EventListener<Args...>>> listeners;
     listeners.resize(std::distance(range.first, range.second));

@@ -42,9 +42,9 @@ const int getNumericUserMode(const std::vector<char> modes) {
 }
 
 IrcClient::IrcClient() {
-    auto startupResult = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (startupResult != 0) {
-        printf("Error: %s\n", WSAFormatError(startupResult));
+    auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
+    if (startup_result != 0) {
+        printf("Error: %s\n", WSAFormatError(startup_result));
         return;
     }
 }
@@ -62,13 +62,13 @@ IrcClient::~IrcClient() {
     ::WSACleanup();
 }
 
-void IrcClient::connect(const string hostName, const int port,
-                        const IrcRegistrationInfo registrationInfo) {
-    this->hostName = hostName;
+void IrcClient::connect(const string hostname, const int port,
+                        const IrcRegistrationInfo registration_info) {
+    this->hostname = hostname;
     this->port = port;
-    this->registrationInfo = registrationInfo;
+    this->registration_info = registration_info;
 
-    struct addrinfo* addressInfo;
+    struct addrinfo* addrinfo;
     struct addrinfo hints;
 
     ZeroMemory(&hints, sizeof(hints));
@@ -76,16 +76,15 @@ void IrcClient::connect(const string hostName, const int port,
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    int getAddrInfoResult =
-        ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
-    if (getAddrInfoResult != SUCCESS) {
-        printf("Error: %s\n", gai_strerror(getAddrInfoResult));
+    int getaddrinfo_result =
+        ::getaddrinfo(hostname.c_str(), to_string(port).c_str(), &hints, &addrinfo);
+    if (getaddrinfo_result != SUCCESS) {
+        printf("Error: %s\n", gai_strerror(getaddrinfo_result));
         ::WSACleanup();
         return;
     }
 
-    this->socket =
-        ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
+    this->socket = ::socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
     if (this->socket == INVALID_SOCKET) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         freeaddrinfo(&hints);
@@ -93,8 +92,8 @@ void IrcClient::connect(const string hostName, const int port,
         return;
     }
 
-    int connectResult = ::connect(this->socket, addressInfo->ai_addr, (int)addressInfo->ai_addrlen);
-    if (connectResult == SOCKET_ERROR) {
+    int connect_result = ::connect(this->socket, addrinfo->ai_addr, (int)addrinfo->ai_addrlen);
+    if (connect_result == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         if (::closesocket(this->socket) != SUCCESS) {
             printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
@@ -108,19 +107,20 @@ void IrcClient::connect(const string hostName, const int port,
 }
 
 void IrcClient::connected() {
-    if (!registrationInfo.password.empty()) {
-        this->sendMessagePassword(registrationInfo.password);
+    if (!this->registration_info.password.empty()) {
+        this->sendMessagePassword(this->registration_info.password);
     }
-    this->sendMessageNick(registrationInfo.nickName);
-    this->sendMessageUser(registrationInfo.userName, registrationInfo.realName,
-                          registrationInfo.userModes);
+    this->sendMessageNick(this->registration_info.nickname);
+    this->sendMessageUser(this->registration_info.username, 
+                          this->registration_info.realname,
+                          this->registration_info.user_modes);
 
-    auto localUser = new IrcLocalUser();
-    localUser->nickName = registrationInfo.nickName;
-    localUser->userName = registrationInfo.userName;
+    auto local_user = new IrcLocalUser();
+    local_user->nickname = this->registration_info.nickname;
+    local_user->username = this->registration_info.username;
 
-    this->localUser = localUser;
-    this->users.push_back(localUser);
+    this->local_user = local_user;
+    this->users.push_back(local_user);
 }
 
 void IrcClient::listen(const string remainder) {
@@ -242,52 +242,52 @@ void IrcClient::sendRawMessage(const string message) {
  */
 void IrcClient::parseMessage(const string line) {
     string prefix;
-    string lineAfterPrefix;
+    string line_after_prefix;
 
     if (line[0] == ':') {
-        auto firstSpaceIndex = line.find(" ");
-        prefix = line.substr(1, firstSpaceIndex - 1);
-        lineAfterPrefix = line.substr(firstSpaceIndex + 1);
+        auto first_space_index = line.find(" ");
+        prefix = line.substr(1, first_space_index - 1);
+        line_after_prefix = line.substr(first_space_index + 1);
     } else {
-        lineAfterPrefix = line;
+        line_after_prefix = line;
     }
 
-    size_t spaceIndex = lineAfterPrefix.find(" ");
-    if (spaceIndex == std::string::npos) {
+    size_t space_index = line_after_prefix.find(" ");
+    if (space_index == std::string::npos) {
         // This is unexpected, but will cause a index-out-of-range assertion
         // if invalid input is provided to parseMessage(..)
         return;
     }
 
-    string command = lineAfterPrefix.substr(0, spaceIndex);
-    string paramsLine = lineAfterPrefix.substr(command.length() + 1);
-    size_t paramsLineLength = paramsLine.length();
+    string command = line_after_prefix.substr(0, space_index);
+    string params_line = line_after_prefix.substr(command.length() + 1);
+    size_t params_line_length = params_line.length();
 
     vector<string> parameters;
-    int paramStartIndex = -1;
-    size_t paramEndIndex = std::string::npos;
+    int param_start_index = -1;
+    size_t param_end_index = std::string::npos;
 
-    size_t lineColonIndex = paramsLine.find(" :");
-    if (lineColonIndex == std::string::npos && paramsLine.find(":") != 0) {
-        lineColonIndex = paramsLineLength;
+    size_t line_colon_index = params_line.find(" :");
+    if (line_colon_index == std::string::npos && params_line.find(":") != 0) {
+        line_colon_index = params_line_length;
     }
 
     for (int i = 0; i < MAX_PARAMETERS_COUNT; i++) {
-        paramStartIndex = (int)paramEndIndex + 1;
-        paramEndIndex = paramsLine.find(' ', paramStartIndex);
+        param_start_index = (int)param_end_index + 1;
+        param_end_index = params_line.find(' ', param_start_index);
 
-        if (paramEndIndex == std::string::npos) {
-            paramEndIndex = paramsLineLength;
+        if (param_end_index == std::string::npos) {
+            param_end_index = params_line_length;
         }
 
-        if (lineColonIndex == std::string::npos || paramEndIndex > lineColonIndex) {
-            paramStartIndex++;
-            paramEndIndex = paramsLineLength;
+        if (line_colon_index == std::string::npos || param_end_index > line_colon_index) {
+            param_start_index++;
+            param_end_index = params_line_length;
         }
 
-        parameters.push_back(paramsLine.substr(paramStartIndex, paramEndIndex - paramStartIndex));
+        parameters.push_back(params_line.substr(param_start_index, param_end_index - param_start_index));
 
-        if (paramEndIndex == paramsLineLength) {
+        if (param_end_index == params_line_length) {
             break;
         }
     }
@@ -360,14 +360,14 @@ void IrcClient::sendMessagePassword(const string password) {
     this->writeMessage("", "PASS", { password });
 }
 
-void IrcClient::sendMessageNick(const string nickName) {
-    this->writeMessage("", "NICK", { nickName });
+void IrcClient::sendMessageNick(const string nickname) {
+    this->writeMessage("", "NICK", { nickname });
 }
 
-void IrcClient::sendMessageUser(const string userName, const string realName,
-                                const vector<char> userModes) {
-    int numericUserMode = getNumericUserMode(userModes);
-    this->writeMessage("", "USER", { userName, to_string(numericUserMode), "*", realName });
+void IrcClient::sendMessageUser(const string username, const string realname,
+                                const vector<char> user_modes) {
+    int numericUserMode = getNumericUserMode(user_modes);
+    this->writeMessage("", "USER", { username, to_string(numericUserMode), "*", realname });
 }
 
 void IrcClient::sendMessagePong(const string ping) {
@@ -384,35 +384,35 @@ void IrcClient::processMessagePing(const IrcMessage message) {
 // - Utils
 
 IrcMessageSource* IrcClient::getSourceFromPrefix(const string prefix) {
-    auto dotIndex = prefix.find('.') + 1;
-    auto bangIndex = prefix.find('!') + 1;
-    auto atIndex = prefix.find('@', bangIndex) + 1;
+    auto dot_index = prefix.find('.') + 1;
+    auto bang_index = prefix.find('!') + 1;
+    auto at_index = prefix.find('@', bang_index) + 1;
 
-    if (bangIndex > 0) {
-        auto nickName = prefix.substr(0, bangIndex - 1);
+    if (bang_index > 0) {
+        auto nickName = prefix.substr(0, bang_index - 1);
         auto user = this->getUserFromNickName(nickName);
-        if (atIndex > 0) {
-            user->userName = prefix.substr(bangIndex, atIndex - 1);
-            user->hostName = prefix.substr(atIndex);
+        if (at_index > 0) {
+            user->username = prefix.substr(bang_index, at_index - 1);
+            user->hostname = prefix.substr(at_index);
         } else {
-            user->userName = prefix.substr(bangIndex);
+            user->username = prefix.substr(bang_index);
         }
         return user;
-    } else if (atIndex > 0) {
-        auto nickName = prefix.substr(0, atIndex - 1);
-        auto user = this->getUserFromNickName(nickName);
-        user->hostName = prefix.substr(atIndex);
+    } else if (at_index > 0) {
+        auto nickname = prefix.substr(0, at_index - 1);
+        auto user = this->getUserFromNickName(nickname);
+        user->hostname = prefix.substr(at_index);
         return user;
-    } else if (dotIndex > 0) {
+    } else if (dot_index > 0) {
         return this->getServerFromHostName(prefix);
     } else {
         return this->getUserFromNickName(prefix);
     }
 }
 
-IrcUser* IrcClient::getUserFromNickName(const string nickName) {
-    auto user = find_if(this->users.begin(), this->users.end(), [&nickName](const IrcUser* obj) {
-        return _stricmp(obj->nickName.c_str(), nickName.c_str()) == 0;
+IrcUser* IrcClient::getUserFromNickName(const string nickname) {
+    auto user = find_if(this->users.begin(), this->users.end(), [&nickname](const IrcUser* obj) {
+        return _stricmp(obj->nickname.c_str(), nickname.c_str()) == 0;
     });
 
     if (user != this->users.end()) {
@@ -420,17 +420,17 @@ IrcUser* IrcClient::getUserFromNickName(const string nickName) {
     }
 
     auto newUser = new IrcUser();
-    newUser->nickName = nickName;
+    newUser->nickname = nickname;
 
     this->users.push_back(newUser);
 
     return newUser;
 }
 
-IrcServer* IrcClient::getServerFromHostName(const string hostName) {
+IrcServer* IrcClient::getServerFromHostName(const string hostname) {
     auto server =
-        find_if(this->servers.begin(), this->servers.end(), [&hostName](const IrcServer* obj) {
-            return _stricmp(obj->hostName.c_str(), hostName.c_str());
+        find_if(this->servers.begin(), this->servers.end(), [&hostname](const IrcServer* obj) {
+            return _stricmp(obj->hostname.c_str(), hostname.c_str());
         });
 
     if (server != this->servers.end()) {
@@ -438,28 +438,28 @@ IrcServer* IrcClient::getServerFromHostName(const string hostName) {
     }
 
     auto newServer = new IrcServer();
-    newServer->hostName = hostName;
+    newServer->hostname = hostname;
 
     this->servers.push_back(newServer);
 
     return newServer;
 }
 
-const char* WSAFormatError(const int errorCode) {
-    LPSTR errString;
+const char* WSAFormatError(const int error_code) {
+    LPSTR error_string;
 
     int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                                  FORMAT_MESSAGE_FROM_SYSTEM, // windows internal message table
-                             0,         // 0, since source is internal message table
-                             errorCode, // error code returned by WSAGetLastError()
-                             0,         // 0, auto-determine which language to use.
-                             (LPSTR)&errString,
+                             0,          // 0, since source is internal message table
+                             error_code, // error code returned by WSAGetLastError()
+                             0,          // 0, auto-determine which language to use.
+                             (LPSTR)&error_string,
                              0,  // buffer minimum size.
                              0); // 0, since getting message from system tables
 
     if (size == 0) {
-        return ("Unknown Error Code: " + to_string(errorCode)).c_str();
+        return ("Unknown Error Code: " + to_string(error_code)).c_str();
     }
 
-    return errString;
+    return error_string;
 }

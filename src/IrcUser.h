@@ -10,12 +10,12 @@ class IrcUser : public IrcMessageSource {
     IrcUser();
     ~IrcUser();
 
-    std::string nickName;
-    std::string userName;
-    std::string hostName;
+    std::string nickname;
+    std::string username;
+    std::string hostname;
 
     std::string getName() {
-        return this->nickName;
+        return this->nickname;
     }
 
     bool isLocalUser() {

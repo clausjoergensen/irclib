@@ -10,10 +10,10 @@ class IrcServer : public IrcMessageSource {
     IrcServer();
     ~IrcServer();
 
-    std::string hostName;
+    std::string hostname;
 
     std::string getName() {
-        return this->hostName;
+        return this->hostname;
     }
 };
 

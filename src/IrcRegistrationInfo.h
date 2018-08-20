@@ -7,11 +7,11 @@
 namespace LibIrc {
 
 struct IrcRegistrationInfo {
-    std::string nickName;
-    std::string userName;
-    std::string realName;
+    std::string nickname;
+    std::string username;
+    std::string realname;
     std::string password;
-    std::vector<char> userModes;
+    std::vector<char> user_modes;
 };
 
 } // namespace LibIrc
