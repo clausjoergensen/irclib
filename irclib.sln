@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "irclib", "irclib.vcxproj", "{7B377255-1CCA-4D88-97FF-B52DCA63006E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{FCA6F225-86E9-428F-9BB4-CEFF7F5B8B41}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78D8EFF2-27A1-478C-8310-9502CC92032D}"
 	ProjectSection(SolutionItems) = preProject
 		.clang-format = .clang-format
 		LICENSE.txt = LICENSE.txt
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcxproj", "{FCA6F225-86E9-428F-9BB4-CEFF7F5B8B41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -72,6 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>out\$(Platform)\$(Configuration)\test\</IntDir>
+    <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -147,13 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\IrcClient.h" />
+    <ClInclude Include="src\IrcClient.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\irclib.vcxproj">
+    <ProjectReference Include="irclib.vcxproj">
       <Project>{7b377255-1cca-4d88-97ff-b52dca63006e}</Project>
     </ProjectReference>
   </ItemGroup>
