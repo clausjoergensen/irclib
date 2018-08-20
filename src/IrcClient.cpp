@@ -44,9 +44,11 @@ IrcClient::IrcClient() {
 }
 
 IrcClient::~IrcClient() {
+    this->users.clear();
+    this->servers.clear();
+
     if (this->socket != INVALID_SOCKET) {
         ::closesocket(this->socket);
-        this->socket = INVALID_SOCKET;
     }
 
     ::WSACleanup();
@@ -73,9 +75,10 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     }
 
     this->socket = ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
+    freeaddrinfo(&hints);
+
     if (this->socket == INVALID_SOCKET) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
-        freeaddrinfo(&hints);
         ::WSACleanup();
         return;
     }
@@ -84,7 +87,6 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     if (connectResult == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         ::closesocket(this->socket);
-        this->socket = INVALID_SOCKET;
         ::WSACleanup();
         return;
     }
