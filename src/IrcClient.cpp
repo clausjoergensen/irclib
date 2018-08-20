@@ -416,7 +416,7 @@ char* WSAFormatError(int errorCode) {
 
     if (size == 0) {
         char errorCodeMessage[256];
-        sprintf_s(errorCodeMessage, 256, "%d", errorCode);
+        sprintf_s(errorCodeMessage, 256, "Unknown Error Code (%d)", errorCode);
         return errorCodeMessage;
     }
 
