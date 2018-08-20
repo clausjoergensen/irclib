@@ -157,7 +157,7 @@ void IrcClient::sendRawMessage(string message) {
 
     auto buffer = message.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
-    if (result == SOCKET_ERROR) {        
+    if (result == SOCKET_ERROR) {
         printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
         if (::closesocket(this->socket) != SUCCESS) {
             printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
