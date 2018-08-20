@@ -235,6 +235,8 @@ void IrcClient::parseMessage(string line) {
 
     size_t spaceIndex = lineAfterPrefix.find(" ");
     if (spaceIndex == std::string::npos) {
+        // This is unexpected, but will cause a index-out-of-range assertion 
+        // if invalid input is provided to parseMessage(..)
         return;
     }
 
