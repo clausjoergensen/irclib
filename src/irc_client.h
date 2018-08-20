@@ -3,7 +3,8 @@
 
 #include "pch.h"
 
-#include "eventemitter.h"
+#include "events.h"
+
 #include "irc_message.h"
 #include "irc_registration_info.h"
 #include "irc_server.h"
