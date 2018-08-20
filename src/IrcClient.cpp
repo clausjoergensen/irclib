@@ -36,7 +36,7 @@ int getNumericUserMode(std::vector<char> modes) {
 }
 
 IrcClient::IrcClient() {
-    auto startupResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    auto startupResult = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (startupResult != 0) {
         printf("Error: %s\n", WSAFormatError(startupResult));
         return;
