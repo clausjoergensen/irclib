@@ -296,7 +296,8 @@ void IrcClient::parseMessage(string line) {
 
 void IrcClient::processMessage(IrcMessage message) {
     if (message.command == CMD_PING) {
-        this->sendMessagePong(message.parameters[0]);
+        processMessagePing(message);
+        return;
     }
 
     if (this->onMessage != nullptr) {
@@ -345,6 +346,8 @@ void IrcClient::writeMessage(string message) {
     }
 }
 
+// - Message Sending
+
 void IrcClient::sendMessagePassword(string password) {
     this->writeMessage("", "PASS", { password });
 }
@@ -361,6 +364,16 @@ void IrcClient::sendMessageUser(string userName, string realName, vector<char> u
 void IrcClient::sendMessagePong(string ping) {
     this->writeMessage("", "PONG", { ping });
 }
+
+// - Message Processing
+
+void IrcClient::processMessagePing(IrcMessage message) {
+    assert(message.parameters.size() >= 1);
+
+    this->sendMessagePong(message.parameters[0]);
+}
+
+// - Utils
 
 IrcMessageSource* IrcClient::getSourceFromPrefix(string prefix) {
     auto dotIdx = prefix.find('.') + 1;

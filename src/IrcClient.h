@@ -76,6 +76,8 @@ private:
     void sendMessageUser(std::string userName, std::string realName, std::vector<char> userModes);
     void sendMessagePong(std::string ping);
 
+    void processMessagePing(LibIrc::IrcMessage message);
+
     LibIrc::IrcMessageSource* getSourceFromPrefix(std::string prefix);
     LibIrc::IrcUser* getUserFromNickName(std::string nickName);
     LibIrc::IrcServer* getServerFromHostName(std::string hostName);
