@@ -37,9 +37,9 @@ class IrcClient : public events::EventEmitter {
     void connect(const std::string hostname, const int port,
                  const irclib::IrcRegistrationInfo registration_info);
 
-    //Sends the specified raw message to the server.
+    // Sends the specified raw message to the server.
+    //
     // \param message The text (single line) of the message to send the server.
-    // No CR/LF should be appended.
     void sendRawMessage(const std::string message);
 
     // Gets the local user (or a nullptr before registering).
