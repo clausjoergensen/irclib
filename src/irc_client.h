@@ -1,13 +1,13 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#include "stdafx.h"
+#include "pch.h"
 
-#include "EventEmitter.h"
-#include "IrcMessage.h"
-#include "IrcRegistrationInfo.h"
-#include "IrcServer.h"
-#include "IrcUser.h"
+#include "eventemitter.h"
+#include "irc_message.h"
+#include "irc_registration_info.h"
+#include "irc_server.h"
+#include "irc_user.h"
 
 #include <algorithm>
 #include <functional>
@@ -16,11 +16,11 @@
 #include <string>
 #include <vector>
 
-namespace LibIrc {
+namespace irclib {
 
 // Represents a client that communicates with a server using the IRC (Internet
 // Relay Chat) protocol.
-class IrcClient : public EventEmitter {
+class IrcClient : public events::EventEmitter {
   public:
     // Initializes a new instance of the IrcClient class.
     IrcClient();
@@ -34,7 +34,7 @@ class IrcClient : public EventEmitter {
     // \param port The port number of the remote host.
     // \param registration_info The information used for registering the client.
     void connect(const std::string hostname, const int port,
-                 const LibIrc::IrcRegistrationInfo registration_info);
+                 const irclib::IrcRegistrationInfo registration_info);
 
     //Sends the specified raw message to the server.
     // \param message The text (single line) of the message to send the server.
@@ -42,7 +42,7 @@ class IrcClient : public EventEmitter {
     void sendRawMessage(const std::string message);
 
     // Gets the local user (or a nullptr before registering).
-    const LibIrc::IrcLocalUser* getLocalUser() {
+    const irclib::IrcLocalUser* getLocalUser() {
         return this->local_user;
     }
 
@@ -52,8 +52,8 @@ class IrcClient : public EventEmitter {
 
     void parseMessage(const std::string line);
 
-    void processMessage(const LibIrc::IrcMessage message);
-    void processMessagePing(const LibIrc::IrcMessage message);
+    void processMessage(const irclib::IrcMessage message);
+    void processMessagePing(const irclib::IrcMessage message);
 
     void writeMessage(const std::string message);
     void writeMessage(const std::string prefix, const std::string command,
@@ -65,20 +65,20 @@ class IrcClient : public EventEmitter {
                          const std::vector<char> user_modes);
     void sendMessagePong(const std::string ping);
 
-    LibIrc::IrcMessageSource* getSourceFromPrefix(const std::string prefix);
-    LibIrc::IrcUser* getUserFromNickName(const std::string nickname);
-    LibIrc::IrcServer* getServerFromHostName(const std::string hostname);
+    irclib::IrcMessageSource* getSourceFromPrefix(const std::string prefix);
+    irclib::IrcUser* getUserFromNickName(const std::string nickname);
+    irclib::IrcServer* getServerFromHostName(const std::string hostname);
 
     std::string hostname;
     int port;
-    LibIrc::IrcRegistrationInfo registration_info;
-    LibIrc::IrcLocalUser* local_user;
+    irclib::IrcRegistrationInfo registration_info;
+    irclib::IrcLocalUser* local_user;
 
     ::WSADATA wsadata;
     ::SOCKET socket;
 
-    std::vector<LibIrc::IrcUser*> users;
-    std::vector<LibIrc::IrcServer*> servers;
+    std::vector<irclib::IrcUser*> users;
+    std::vector<irclib::IrcServer*> servers;
 };
 
-} // namespace LibIrc
+} // namespace irclib

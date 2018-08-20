@@ -11,51 +11,45 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\IrcClient.h">
+    <ClInclude Include="src\irc_user.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcMessage.h">
+    <ClInclude Include="src\irc_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcRegistrationInfo.h">
+    <ClInclude Include="src\irc_registration_info.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcServer.h">
+    <ClInclude Include="src\irc_message_source.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcUser.h">
+    <ClInclude Include="src\irc_message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcReply.h">
+    <ClInclude Include="src\irc_commands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcCommand.h">
+    <ClInclude Include="src\irc_errors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcError.h">
+    <ClInclude Include="src\irc_replies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EventEmitter.h">
+    <ClInclude Include="src\irc_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IrcMessageSource.h">
+    <ClInclude Include="src\eventemitter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\stdafx.h">
+    <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\IrcServer.cpp">
+    <ClCompile Include="src\irc_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\IrcUser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IrcClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EventEmitter.cpp">
+    <ClCompile Include="src\eventemitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

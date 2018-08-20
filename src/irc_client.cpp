@@ -1,10 +1,10 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
-#include "stdafx.h"
+#include "pch.h"
 
-#include "IrcClient.h"
-#include "IrcCommand.h"
-#include "IrcError.h"
-#include "IrcReply.h"
+#include "irc_client.h"
+#include "irc_commands.h"
+#include "irc_errors.h"
+#include "irc_replies.h"
 
 #include <algorithm>
 #include <cassert>
@@ -13,7 +13,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 using namespace std;
-using namespace LibIrc;
+using namespace irclib;
 
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
@@ -114,8 +114,7 @@ void IrcClient::connected() {
                           this->registration_info.realname,
                           this->registration_info.user_modes);
 
-    auto local_user = new IrcLocalUser();
-    local_user->nickname = this->registration_info.nickname;
+    auto local_user = new IrcLocalUser(this->registration_info.nickname);
     local_user->username = this->registration_info.username;
 
     this->local_user = local_user;
@@ -418,9 +417,7 @@ IrcUser* IrcClient::getUserFromNickName(const string nickname) {
         return *user;
     }
 
-    auto newUser = new IrcUser();
-    newUser->nickname = nickname;
-
+    auto newUser = new IrcUser(nickname);
     this->users.push_back(newUser);
 
     return newUser;
@@ -436,9 +433,7 @@ IrcServer* IrcClient::getServerFromHostName(const string hostname) {
         return *server;
     }
 
-    auto newServer = new IrcServer();
-    newServer->hostname = hostname;
-
+    auto newServer = new IrcServer(hostname);
     this->servers.push_back(newServer);
 
     return newServer;

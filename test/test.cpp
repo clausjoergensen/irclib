@@ -1,10 +1,10 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
-#include "../src/IrcClient.h"
+#include "../src/irc_client.h"
 #include <crtdbg.h>
 #include <thread>
 
 using namespace std;
-using namespace LibIrc;
+using namespace irclib;
 
 int main() {
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace LibIrc {
+namespace irclib {
 
 struct IrcRegistrationInfo {
     std::string nickname;
@@ -14,4 +14,4 @@ struct IrcRegistrationInfo {
     std::vector<char> user_modes;
 };
 
-} // namespace LibIrc
+} // namespace irclib

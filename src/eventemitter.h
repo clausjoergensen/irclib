@@ -7,20 +7,21 @@
 #include <string>
 #include <vector>
 
+namespace events {
+
 struct EventListenerBase {
     EventListenerBase() {}
-    EventListenerBase(const std::string event_name) : event_name(event_name) {
-    }
+    EventListenerBase(const std::string event_name) : event_name(event_name) {}
+    
     virtual ~EventListenerBase() {}
 
     const std::string event_name;
 };
 
 template <typename... Args> struct EventListener : EventListenerBase {
-    EventListener() {}
+    EventListener() {}    
     EventListener(const std::string event_name, const std::function<void(Args...)> handler)
-        : EventListenerBase(event_name), handler(handler) {
-    }
+        : EventListenerBase(event_name), handler(handler) {}
 
     virtual ~EventListener() {}
 
@@ -77,7 +78,9 @@ template <typename... Args> void EventEmitter::emit(std::string event_name, Args
         return std::dynamic_pointer_cast<EventListener<Args...>>(pair.second);
     });
 
-    for (auto &listener : listeners) {
+    for (auto& listener : listeners) {
         listener->handler(args...);
     }
 }
+
+} // namespace events

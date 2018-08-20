@@ -3,11 +3,11 @@
 
 #include <string>
 
-namespace LibIrc {
+namespace irclib {
 
 class IrcMessageSource {
   public:
     virtual std::string getName() = 0;
 };
 
-} // namespace LibIrc
+} // namespace irclib

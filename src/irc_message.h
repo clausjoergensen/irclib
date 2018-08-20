@@ -4,18 +4,18 @@
 #include <string>
 #include <vector>
 
-namespace LibIrc {
+namespace irclib {
 
 class IrcClient;
 class IrcMessageSource;
 
 struct IrcMessage {
-    IrcClient *client;
+    irclib::IrcClient* client;
     std::string prefix;
     std::string command;
     std::vector<std::string> parameters;
-    IrcMessageSource *source;
+    irclib::IrcMessageSource* source;
     std::string raw;
 };
 
-} // namespace LibIrc
+} // namespace irclib

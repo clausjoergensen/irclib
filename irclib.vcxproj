@@ -85,7 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,23 +117,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\EventEmitter.h" />
-    <ClInclude Include="src\IrcClient.h" />
-    <ClInclude Include="src\IrcCommand.h" />
-    <ClInclude Include="src\IrcError.h" />
-    <ClInclude Include="src\IrcMessage.h" />
-    <ClInclude Include="src\IrcMessageSource.h" />
-    <ClInclude Include="src\IrcRegistrationInfo.h" />
-    <ClInclude Include="src\IrcReply.h" />
-    <ClInclude Include="src\IrcServer.h" />
-    <ClInclude Include="src\IrcUser.h" />
-    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\eventemitter.h" />
+    <ClInclude Include="src\irc_client.h" />
+    <ClInclude Include="src\irc_commands.h" />
+    <ClInclude Include="src\irc_errors.h" />
+    <ClInclude Include="src\irc_message.h" />
+    <ClInclude Include="src\irc_message_source.h" />
+    <ClInclude Include="src\irc_registration_info.h" />
+    <ClInclude Include="src\irc_replies.h" />
+    <ClInclude Include="src\irc_server.h" />
+    <ClInclude Include="src\irc_user.h" />
+    <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\EventEmitter.cpp" />
-    <ClCompile Include="src\IrcClient.cpp" />
-    <ClCompile Include="src\IrcServer.cpp" />
-    <ClCompile Include="src\IrcUser.cpp" />
+    <ClCompile Include="src\eventemitter.cpp" />
+    <ClCompile Include="src\irc_client.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

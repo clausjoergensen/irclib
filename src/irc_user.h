@@ -1,14 +1,16 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#include "IrcMessageSource.h"
+#include "irc_message_source.h"
 
-namespace LibIrc {
+namespace irclib {
 
 class IrcUser : public IrcMessageSource {
   public:
-    IrcUser();
-    ~IrcUser();
+    IrcUser(std::string nickname) 
+        : nickname(nickname) {}
+
+    ~IrcUser() {}
 
     std::string nickname;
     std::string username;
@@ -25,8 +27,10 @@ class IrcUser : public IrcMessageSource {
 
 class IrcLocalUser : public IrcUser {
   public:
-    IrcLocalUser();
-    ~IrcLocalUser();
+    IrcLocalUser(std::string nickname) 
+        : IrcUser(nickname) {}
+
+    ~IrcLocalUser() {}
 
   public:
     bool isLocalUser() {
@@ -34,4 +38,4 @@ class IrcLocalUser : public IrcUser {
     }
 };
 
-} // namespace LibIrc
+} // namespace irclib

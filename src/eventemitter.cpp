@@ -1,8 +1,10 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#include "stdafx.h"
-#include "EventEmitter.h"
+#include "pch.h"
+#include "eventemitter.h"
+
+using namespace events;
 
 EventEmitter::EventEmitter() {}
 

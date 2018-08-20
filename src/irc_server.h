@@ -1,14 +1,16 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#include "IrcMessageSource.h"
+#include "irc_message_source.h"
 
-namespace LibIrc {
+namespace irclib {
 
 class IrcServer : public IrcMessageSource {
   public:
-    IrcServer();
-    ~IrcServer();
+    IrcServer(std::string hostname) 
+        : hostname(hostname) {}
+    
+    ~IrcServer() {}
 
     std::string hostname;
 
@@ -17,4 +19,4 @@ class IrcServer : public IrcMessageSource {
     }
 };
 
-} // namespace LibIrc
+} // namespace irclib
