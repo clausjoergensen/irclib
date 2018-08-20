@@ -315,9 +315,9 @@ void IrcClient::writeMessage(string prefix, string command, vector<string> param
     auto message = ss.str();
     auto buffer = message.c_str();
 
-    auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
-    if (result == SOCKET_ERROR) {
-        printf("Send failed: %d\n", WSAGetLastError());
+    int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);
+    if (sendResult == SOCKET_ERROR) {
+        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
         closesocket(this->socket);
         WSACleanup();
         return;
