@@ -14,7 +14,9 @@ using namespace LibIrc;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 
-inline std::string& toUpperCase(std::string& str) {
+char* WSAFormatError(int errorCode);
+
+std::string& toUpperCase(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
     return str;
 }
@@ -36,7 +38,7 @@ int getNumericUserMode(std::vector<char> modes) {
 IrcClient::IrcClient() {
     auto startupResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (startupResult != 0) {
-        printf("WSAStartup failed: %d\n", startupResult);
+        printf("Error: %s\n", WSAFormatError(startupResult));
         return;
     }
 }
@@ -55,56 +57,56 @@ void IrcClient::connect(string hostName, int port, IrcRegistrationInfo registrat
     this->port = port;
     this->registrationInfo = registrationInfo;
 
-    // Create and Connect a WINSOCK socket.
-    struct addrinfo *addressInfo = NULL, *networkAddress = NULL, hints;
+    struct addrinfo *addressInfo;
+    struct addrinfo hints;
 
     ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET | AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    INT getAddrInfoResult = ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
+    int getAddrInfoResult = ::getaddrinfo(hostName.c_str(), to_string(port).c_str(), &hints, &addressInfo);
     if (getAddrInfoResult != SUCCESS) {
-        printf("getaddrinfo failed: %d\n", getAddrInfoResult);
+        printf("Error: %s\n", gai_strerror(getAddrInfoResult));
         WSACleanup();
         return;
     }
 
-    networkAddress = addressInfo;
-
-    this->socket = ::socket(networkAddress->ai_family, networkAddress->ai_socktype, networkAddress->ai_protocol);
+    this->socket = ::socket(addressInfo->ai_family, addressInfo->ai_socktype, addressInfo->ai_protocol);
     if (this->socket == INVALID_SOCKET) {
-        printf("Error at socket(): %d\n", WSAGetLastError());
+        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
         freeaddrinfo(&hints);
         WSACleanup();
         return;
     }
 
-    INT connectResult = ::connect(this->socket, networkAddress->ai_addr, (int)networkAddress->ai_addrlen);
+    int connectResult = ::connect(this->socket, addressInfo->ai_addr, (int)addressInfo->ai_addrlen);
     if (connectResult == SOCKET_ERROR) {
+        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
         closesocket(this->socket);
         this->socket = INVALID_SOCKET;
+        WSACleanup();
+        return;
     }
 
-    // Once we're connected to the server, send the registration commands NICK and USER, and optionally PASSWORD.
+    this->connected();
+    this->listen();
+}
+
+void IrcClient::connected() {
     if (!registrationInfo.password.empty()) {
         this->sendMessagePassword(registrationInfo.password);
     }
     this->sendMessageNick(registrationInfo.nickName);
     this->sendMessageUser(registrationInfo.userName, registrationInfo.realName, registrationInfo.userModes);
 
-    // Instantitate a local user.
     auto localUser = new IrcLocalUser();
     localUser->nickName = registrationInfo.nickName;
     localUser->userName = registrationInfo.userName;
-
     this->users.push_back(localUser);
-
-    // Start listen for input
-    this->listen();
 }
 
-void IrcClient::listen(std::string remainder) {
+void IrcClient::listen(string remainder) {
     const int receiveBufferLength = 256;
     char receiveBuffer[receiveBufferLength];
     int bytesRead;
@@ -120,7 +122,7 @@ void IrcClient::listen(std::string remainder) {
         string line;
         while (getline(ss, line)) {
             if (ss.eof()) {
-                listen(line);
+                listen(line); // String was incomplete line, prepend to next read.
                 return;
             }
 
@@ -134,7 +136,7 @@ void IrcClient::listen(std::string remainder) {
     } else if (bytesRead == 0) {
         printf("Connection closed\r\n");
     } else {
-        printf("recv failed: %d\n", WSAGetLastError());
+        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
     }
 }
 
@@ -143,8 +145,8 @@ void IrcClient::sendRawMessage(string message) {
 
     auto buffer = message.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
-    if (result == SOCKET_ERROR) {
-        printf("Send failed: %d\n", WSAGetLastError());
+    if (result == SOCKET_ERROR) {        
+        printf("Error: %s\n", WSAFormatError(WSAGetLastError()));
         closesocket(this->socket);
         WSACleanup();
         return;
@@ -394,4 +396,25 @@ IrcServer* IrcClient::getServerFromHostName(string hostName) {
     this->servers.push_back(newServer);
 
     return newServer;
+}
+
+char* WSAFormatError(int errorCode) {
+    LPSTR errString;
+
+    int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+        FORMAT_MESSAGE_FROM_SYSTEM, // windows internal message table
+        0, // 0, since source is internal message table
+        errorCode, // error code returned by WSAGetLastError()
+        0, // 0, auto-determine which language to use.
+        (LPSTR)&errString,
+        0, // buffer minimum size.
+        0); // 0, since getting message from system tables
+
+    if (size == 0) {
+        char errorCodeMessage[256];
+        sprintf_s(errorCodeMessage, 256, "%d", errorCode);
+        return errorCodeMessage;
+    }
+
+    return errString;
 }

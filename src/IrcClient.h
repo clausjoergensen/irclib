@@ -62,6 +62,7 @@ public:
     void sendRawMessage(std::string message);
 
 private:
+    void connected();
     void listen(std::string remainder = "");
 
     void parseMessage(std::string line);
