@@ -55,7 +55,7 @@ class IrcClient : public EventEmitter {
     /**
      * Gets the local user (or a nullptr before registering).
      */
-    const IrcLocalUser* getLocalUser() {
+    const LibIrc::IrcLocalUser* getLocalUser() {
         return this->localUser;
     }
 
@@ -87,8 +87,8 @@ class IrcClient : public EventEmitter {
     LibIrc::IrcRegistrationInfo registrationInfo;
     LibIrc::IrcLocalUser* localUser;
 
-    WSADATA wsaData;
-    SOCKET socket;
+    ::WSADATA wsaData;
+    ::SOCKET socket;
 
     std::vector<LibIrc::IrcUser*> users;
     std::vector<LibIrc::IrcServer*> servers;
