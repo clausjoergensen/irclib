@@ -31,15 +31,15 @@ class IrcClient : public events::EventEmitter {
 
     // Connects to the specified server.
     //
-    // \param hostname The name of the remote host.
-    // \param port The port number of the remote host.
-    // \param registration_info The information used for registering the client.
+    // @param hostname The name of the remote host.
+    // @param port The port number of the remote host.
+    // @param registration_info The information used for registering the client.
     void connect(const std::string hostname, const int port,
                  const irclib::IrcRegistrationInfo registration_info);
 
     // Sends the specified raw message to the server.
     //
-    // \param message The text (single line) of the message to send the server.
+    // @param message The text (single line) of the message to send the server.
     void sendRawMessage(const std::string message);
 
     // Gets the local user (or a nullptr before registering).
