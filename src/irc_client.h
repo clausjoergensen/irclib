@@ -80,6 +80,7 @@ class IrcClient : public events::EventEmitter {
     ::WSADATA wsadata;
     ::SOCKET socket;
 
+    std::thread listening_thread;
     std::mutex mutex;
 
     std::vector<irclib::IrcUser*> users;

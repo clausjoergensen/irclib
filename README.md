@@ -5,15 +5,20 @@ A C++ port of jsIRC
 ### Example Usage
 
 ```cpp
-IrcRegistrationInfo registration_info;
+using namespace irclib;
+
+irclib::IrcRegistrationInfo registration_info;
 registration_info.nickname = "Twoflower";
 registration_info.username = "Twoflower";
 registration_info.realname = "Twoflower the Tourist";
 
 std::unique_ptr<IrcClient> client(new IrcClient());
-std::thread t([&client, &registration_info] {
-    client->connect("localhost", 6667, registration_info);
+
+client->on(RPL_TOPIC, [](const IrcMessage message) {
+    std::cout << "Topic is: '" << message.parameters[2] << "'\r\n";
 });
+
+client->connect("localhost", 6667, registration_info);
 
 client->sendRawMessage("JOIN ##c++");
 client->sendRawMessage("PRIVMSG ##c++ hi everyone");

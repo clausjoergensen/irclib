@@ -34,7 +34,7 @@ const int getNumericUserMode(const std::vector<char> modes) {
     return value;
 }
 
-IrcClient::IrcClient() {
+IrcClient::IrcClient() : listening_thread() {
     auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
     if (startup_result != 0) {
         this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
@@ -45,6 +45,10 @@ IrcClient::IrcClient() {
 IrcClient::~IrcClient() {
     this->users.clear();
     this->servers.clear();
+
+    if (this->listening_thread.joinable()) {
+        this->listening_thread.join();
+    }
 
     if (this->socket != INVALID_SOCKET) {
         if (::closesocket(this->socket) != SUCCESS) {
@@ -96,7 +100,7 @@ void IrcClient::connect(const string hostname, const int port,
     }
 
     this->connected();
-    this->listen();
+    this->listening_thread = std::thread([this]{ this->listen(); });
 }
 
 void IrcClient::connected() {
@@ -104,8 +108,7 @@ void IrcClient::connected() {
         this->sendMessagePassword(this->registration_info.password);
     }
     this->sendMessageNick(this->registration_info.nickname);
-    this->sendMessageUser(this->registration_info.username, 
-                          this->registration_info.realname,
+    this->sendMessageUser(this->registration_info.username, this->registration_info.realname,
                           this->registration_info.user_modes);
 
     auto local_user = new IrcLocalUser(this->registration_info.nickname);
@@ -280,7 +283,8 @@ void IrcClient::parseMessage(const string line) {
             param_end_index = params_line_length;
         }
 
-        parameters.push_back(params_line.substr(param_start_index, param_end_index - param_start_index));
+        parameters.push_back(
+            params_line.substr(param_start_index, param_end_index - param_start_index));
 
         if (param_end_index == params_line_length) {
             break;
