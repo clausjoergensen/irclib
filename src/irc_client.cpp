@@ -6,10 +6,6 @@
 #include "irc_errors.h"
 #include "irc_replies.h"
 
-#include <algorithm>
-#include <cassert>
-#include <locale>
-#include <mutex>
 
 #pragma comment(lib, "Ws2_32.lib")
 

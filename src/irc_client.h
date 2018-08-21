@@ -10,13 +10,6 @@
 #include "irc_server.h"
 #include "irc_user.h"
 
-#include <algorithm>
-#include <functional>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
 #define NETWORK_ERROR "network-error"
 #define PROTOCOL_ERROR "protocol-error"
 

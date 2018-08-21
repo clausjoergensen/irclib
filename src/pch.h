@@ -8,3 +8,13 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+#include <algorithm>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <locale>
+#include <mutex>
+#include <sstream>
+#include <string>
+#include <vector>
