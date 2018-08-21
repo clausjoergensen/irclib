@@ -131,7 +131,7 @@ int main() {
         client->on(RPL_TOPIC, [](const IrcMessage message) {
             std::cout << "[" << timestamp() << "] "
                       << "* " << message.parameters[1] << ": "
-                      << "Topic is: '" << message.parameters[0] << "'"
+                      << "Topic is: '" << message.parameters[2] << "'"
                       << "\r\n";
         });
 
