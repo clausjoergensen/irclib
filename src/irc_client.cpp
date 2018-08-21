@@ -18,12 +18,7 @@ const char* WSAFormatError(const int errorCode);
 const std::string toUpperCase(const std::string str);
 const int getNumericUserMode(const std::vector<char> modes);
 
-IrcClient::IrcClient() {
-    auto startup_result = ::WSAStartup(WINSOCK_VERSION, &wsadata);
-    if (startup_result != 0) {
-        this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
-    }
-}
+IrcClient::IrcClient() {}
 
 IrcClient::~IrcClient() {
     this->users.clear();
@@ -47,6 +42,12 @@ void IrcClient::connect(const string hostname, const int port,
     this->hostname = hostname;
     this->port = port;
     this->registration_info = registration_info;
+
+    auto startup_result = ::WSAStartup(WINSOCK_VERSION, &wsadata);
+    if (startup_result != 0) {
+        this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
+        return;
+    }
 
     struct addrinfo* addrinfo;
     struct addrinfo hints;
