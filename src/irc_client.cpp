@@ -84,7 +84,7 @@ void IrcClient::connect(const string hostname, const int port,
     }
 
     this->connected();
-    this->listening_thread = std::thread([this]{ this->listen(); });
+    this->listening_thread = std::thread([this] { this->listen(); });
 }
 
 void IrcClient::connected() {
@@ -301,7 +301,7 @@ void IrcClient::processMessage(const IrcMessage message) {
 }
 
 void IrcClient::writeMessage(const string command, const vector<string> parameters) {
-    #define NO_PREFIX ""
+#define NO_PREFIX ""
     this->writeMessage(NO_PREFIX, command, parameters);
 }
 
