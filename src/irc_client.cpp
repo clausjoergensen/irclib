@@ -12,16 +12,16 @@ using namespace irclib;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 #define CRLF "\r\n"
+#define WINSOCK_VERSION MAKEWORD(2, 2)
 
 const char* WSAFormatError(const int errorCode);
 const std::string toUpperCase(const std::string str);
 const int getNumericUserMode(const std::vector<char> modes);
 
 IrcClient::IrcClient() {
-    auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
+    auto startup_result = ::WSAStartup(WINSOCK_VERSION, &wsadata);
     if (startup_result != 0) {
         this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
-        return;
     }
 }
 
