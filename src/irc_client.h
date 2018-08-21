@@ -59,6 +59,7 @@ class IrcClient : public events::EventEmitter {
     void processMessagePing(const irclib::IrcMessage message);
 
     void writeMessage(const std::string message);
+    void writeMessage(const std::string command, const std::vector<std::string> parameters);
     void writeMessage(const std::string prefix, const std::string command,
                       const std::vector<std::string> parameters);
 

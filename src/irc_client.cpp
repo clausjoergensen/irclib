@@ -11,28 +11,11 @@ using namespace irclib;
 
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
+#define CRLF "\r\n"
 
 const char* WSAFormatError(const int errorCode);
-
-const std::string toUpperCase(const std::string str) {
-    std::string tmp = str;
-    std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
-    return tmp;
-}
-
-const int getNumericUserMode(const std::vector<char> modes) {
-    int value = 0;
-    if (modes.empty()) {
-        return value;
-    }
-    if (std::find(modes.begin(), modes.end(), 'w') != modes.end()) {
-        value |= 0x02;
-    }
-    if (std::find(modes.begin(), modes.end(), 'i') != modes.end()) {
-        value |= 0x04;
-    }
-    return value;
-}
+const std::string toUpperCase(const std::string str);
+const int getNumericUserMode(const std::vector<char> modes);
 
 IrcClient::IrcClient() {
     auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
@@ -161,7 +144,7 @@ void IrcClient::listen(const string remainder) {
 }
 
 void IrcClient::sendRawMessage(const string message) {
-    auto formattedMessage = message + "\r\n";
+    auto formattedMessage = message + CRLF;
     auto buffer = formattedMessage.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {
@@ -316,6 +299,11 @@ void IrcClient::processMessage(const IrcMessage message) {
     }
 }
 
+void IrcClient::writeMessage(const string command, const vector<string> parameters) {
+    #define NO_PREFIX ""
+    this->writeMessage(NO_PREFIX, command, parameters);
+}
+
 void IrcClient::writeMessage(const string prefix, const string command,
                              const vector<string> parameters) {
     stringstream message;
@@ -335,7 +323,7 @@ void IrcClient::writeMessage(const string prefix, const string command,
         message << " :" << parameters[n - 1];
     }
 
-    message << "\r\n";
+    message << CRLF;
 
     this->writeMessage(message.str());
 }
@@ -361,21 +349,21 @@ void IrcClient::writeMessage(const string message) {
 // - Message Sending
 
 void IrcClient::sendMessagePassword(const string password) {
-    this->writeMessage("", "PASS", { password });
+    this->writeMessage(CMD_PASS, { password });
 }
 
 void IrcClient::sendMessageNick(const string nickname) {
-    this->writeMessage("", "NICK", { nickname });
+    this->writeMessage(CMD_NICK, { nickname });
 }
 
 void IrcClient::sendMessageUser(const string username, const string realname,
                                 const vector<char> user_modes) {
     int numericUserMode = getNumericUserMode(user_modes);
-    this->writeMessage("", "USER", { username, to_string(numericUserMode), "*", realname });
+    this->writeMessage(CMD_USER, { username, to_string(numericUserMode), "*", realname });
 }
 
 void IrcClient::sendMessagePong(const string ping) {
-    this->writeMessage("", "PONG", { ping });
+    this->writeMessage(CMD_PONG, { ping });
 }
 
 // - Message Processing
@@ -466,4 +454,26 @@ const char* WSAFormatError(const int error_code) {
     }
 
     return error_string;
+}
+
+const std::string toUpperCase(const std::string str) {
+    std::string tmp = str;
+    std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+    return tmp;
+}
+
+const int getNumericUserMode(const std::vector<char> modes) {
+    int value = 0;
+    if (modes.empty()) {
+        return value;
+    }
+    // Wallops
+    if (std::find(modes.begin(), modes.end(), 'w') != modes.end()) {
+        value |= 0x02;
+    }
+    // Invisible
+    if (std::find(modes.begin(), modes.end(), 'i') != modes.end()) {
+        value |= 0x04;
+    }
+    return value;
 }
