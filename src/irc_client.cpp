@@ -34,7 +34,7 @@ const int getNumericUserMode(const std::vector<char> modes) {
     return value;
 }
 
-IrcClient::IrcClient() : listening_thread() {
+IrcClient::IrcClient() {
     auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
     if (startup_result != 0) {
         this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
