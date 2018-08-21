@@ -6,9 +6,6 @@
 #include "irc_errors.h"
 #include "irc_replies.h"
 
-
-#pragma comment(lib, "Ws2_32.lib")
-
 using namespace std;
 using namespace irclib;
 
