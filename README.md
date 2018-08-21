@@ -7,7 +7,7 @@ A C++ port of jsIRC
 ```cpp
 using namespace irclib;
 
-irclib::IrcRegistrationInfo registration_info;
+IrcRegistrationInfo registration_info;
 registration_info.nickname = "Twoflower";
 registration_info.username = "Twoflower";
 registration_info.realname = "Twoflower the Tourist";
