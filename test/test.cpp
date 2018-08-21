@@ -60,7 +60,7 @@ int main() {
 
     std::unique_ptr<IrcClient> client(new IrcClient());
     std::thread t([&client, &registration_info] {
-        client->on("RPL_WELCOME", [](const IrcMessage message) {
+        client->on(RPL_WELCOME, [](const IrcMessage message) {
             std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
         });
 
