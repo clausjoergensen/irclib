@@ -324,7 +324,7 @@ void IrcClient::writeMessage(const string prefix, const string command,
         message << " :" << parameters[n - 1];
     }
 
-    message << CRLF;
+    message << CRLF; // IRC uses CRLF, and std::endl is typically implemented as LF ('\n')
 
     this->writeMessage(message.str());
 }
