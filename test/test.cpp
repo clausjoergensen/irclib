@@ -1,5 +1,4 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
-#include <crtdbg.h>
 #include <iomanip>
 #include <thread>
 #include <time.h>
@@ -12,47 +11,9 @@
 using namespace std;
 using namespace irclib;
 
-int getConsolePositionY() {
-    HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO console_screen_buffer_info;
-    GetConsoleScreenBufferInfo(console_handle, &console_screen_buffer_info);
-    return console_screen_buffer_info.dwCursorPosition.Y;
-}
-
-const LPWSTR WSAFormatError(const int error_code) {
-    LPWSTR error_string;
-
-    int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                                 FORMAT_MESSAGE_FROM_SYSTEM, // windows internal message table
-                             0,          // 0, since source is internal message table
-                             error_code, // error code returned by WSAGetLastError()
-                             0,          // 0, auto-determine which language to use.
-                             (LPWSTR)&error_string,
-                             0,  // buffer minimum size.
-                             0); // 0, since getting message from system tables
-
-    if (size == 0) {
-        return NULL;
-    }
-
-    return error_string;
-}
-
-std::string timestamp() {
-    time_t now = std::time(nullptr);
-
-    struct tm timeinfo;
-    localtime_s(&timeinfo, &now);
-
-    stringstream ss;
-    ss << std::put_time(&timeinfo, "%H:%M");
-
-    return ss.str();
-}
+std::string timestamp();
 
 int main() {
-    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
-
     IrcRegistrationInfo registration_info;
     registration_info.nickname = "Twoflower";
     registration_info.username = "Twoflower";
@@ -185,4 +146,16 @@ int main() {
     } while (true);
 
     return 0;
+}
+
+std::string timestamp() {
+    time_t now = std::time(nullptr);
+
+    struct tm timeinfo;
+    localtime_s(&timeinfo, &now);
+
+    stringstream ss;
+    ss << std::put_time(&timeinfo, "%H:%M");
+
+    return ss.str();
 }
