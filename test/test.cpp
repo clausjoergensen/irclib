@@ -154,7 +154,8 @@ int main() {
                       << "\r\n";
         });
 
-        client->on(PROTOCOL_ERROR, [](const int numeric_error, const IrcMessage message) {
+        client->on(PROTOCOL_ERROR, [](const IrcMessage message) {
+            const int numeric_error = strtol(message.command.c_str(), nullptr, 10);
             if (numeric_error == ERR_UNKNOWNCOMMAND) {
                 std::cout << "[" << timestamp() << "] Unknown Command.\r\n";
             } else {
