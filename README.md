@@ -12,7 +12,7 @@ registration_info.realname = "Twoflower the Tourist";
 
 std::unique_ptr<IrcClient> client(new IrcClient());
 std::thread t([&client, &registration_info] {
-	client->connect("localhost", 6667, registration_info);
+    client->connect("localhost", 6667, registration_info);
 });
 
 client->sendRawMessage("JOIN ##c++");
