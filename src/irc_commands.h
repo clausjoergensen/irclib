@@ -1,38 +1,42 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#define CMD_PING     "PING"
-#define CMD_PONG     "PONG"
-#define CMD_NICK     "NICK"
-#define CMD_USER     "USER"
-#define CMD_PASS     "PASS"
-#define CMD_VERSION  "VERSION"
-#define CMD_ADMIN    "ADMIN"
-#define CMD_INFO     "INFO"
-#define CMD_PRIVMSG  "PRIVMSG"
-#define CMD_NOTICE   "NOTICE"
-#define CMD_JOIN     "JOIN"
-#define CMD_NAMES    "NAMES"
-#define CMD_PART     "PART"
-#define CMD_KICK     "KICK"
-#define CMD_MODE     "MODE"
-#define CMD_TOPIC    "TOPIC"
-#define CMD_WHO      "WHO"
-#define CMD_MOTD     "MOTD"
-#define CMD_RULES    "RULES"
-#define CMD_OPER     "OPER"
-#define CMD_LIST     "LIST"
-#define CMD_LUSERS   "LUSERS"
-#define CMD_STATS    "STATS"
-#define CMD_USERHOST "USERHOST"
-#define CMD_AWAY     "AWAY"
-#define CMD_ISON     "ISON"
-#define CMD_SUMMON   "SUMMON"
-#define CMD_USERS    "USERS"
-#define CMD_INVITE   "INVITE"
-#define CMD_WHOWAS   "WHOWAS"
-#define CMD_WHOIS    "WHOIS"
-#define CMD_TIME     "TIME"
-#define CMD_LINKS    "LINKS"
-#define CMD_MAP      "MAP"
-#define CMD_COMMANDS "COMMANDS"
+namespace irclib {
+
+constexpr char CMD_PING[]     = "PING";
+constexpr char CMD_PONG[]     = "PONG";
+constexpr char CMD_NICK[]     = "NICK";
+constexpr char CMD_USER[]     = "USER";
+constexpr char CMD_PASS[]     = "PASS";
+constexpr char CMD_VERSION[]  = "VERSION";
+constexpr char CMD_ADMIN[]    = "ADMIN";
+constexpr char CMD_INFO[]     = "INFO";
+constexpr char CMD_PRIVMSG[]  = "PRIVMSG";
+constexpr char CMD_NOTICE[]   = "NOTICE";
+constexpr char CMD_JOIN[]     = "JOIN";
+constexpr char CMD_NAMES[]    = "NAMES";
+constexpr char CMD_PART[]     = "PART";
+constexpr char CMD_KICK[]     = "KICK";
+constexpr char CMD_MODE[]     = "MODE";
+constexpr char CMD_TOPIC[]    = "TOPIC";
+constexpr char CMD_WHO[]      = "WHO";
+constexpr char CMD_MOTD[]     = "MOTD";
+constexpr char CMD_RULES[]    = "RULES";
+constexpr char CMD_OPER[]     = "OPER";
+constexpr char CMD_LIST[]     = "LIST";
+constexpr char CMD_LUSERS[]   = "LUSERS";
+constexpr char CMD_STATS[]    = "STATS";
+constexpr char CMD_USERHOST[] = "USERHOST";
+constexpr char CMD_AWAY[]     = "AWAY";
+constexpr char CMD_ISON[]     = "ISON";
+constexpr char CMD_SUMMON[]   = "SUMMON";
+constexpr char CMD_USERS[]    = "USERS";
+constexpr char CMD_INVITE[]   = "INVITE";
+constexpr char CMD_WHOWAS[]   = "WHOWAS";
+constexpr char CMD_WHOIS[]    = "WHOIS";
+constexpr char CMD_TIME[]     = "TIME";
+constexpr char CMD_LINKS[]    = "LINKS";
+constexpr char CMD_MAP[]      = "MAP";
+constexpr char CMD_COMMANDS[] = "COMMANDS";
+
+} // namespace irclib

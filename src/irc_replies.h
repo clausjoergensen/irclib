@@ -1,146 +1,150 @@
 // This code is licensed under MIT license (see LICENSE.txt for details)
 #pragma once
 
-#define RPL_WELCOME           "001"
-#define RPL_YOURHOST          "002"
-#define RPL_CREATED           "003"
-#define RPL_MYINFO            "004"
-#define RPL_ISUPPORT          "005"
-#define RPL_MAP               "006"
-#define RPL_MAPEND            "007"
-#define RPL_SNOMASK           "008"
-#define RPL_STATMEMTOT        "009"
-#define RPL_STATMEM           "010"
-#define RPL_YOURCOOKIE        "014"
-#define RPL_YOURID            "042"
-#define RPL_SAVENICK          "043"
-#define RPL_ATTEMPTINGJUNC    "050"
-#define RPL_ATTEMPTINGREROUTE "051"
-#define RPL_TRACELINK         "200"
-#define RPL_TRACECONNECTING   "201"
-#define RPL_TRACEHANDSHAKE    "202"
-#define RPL_TRACEUNKNOWN      "203"
-#define RPL_TRACEOPERATOR     "204"
-#define RPL_TRACEUSER         "205"
-#define RPL_TRACESERVER       "206"
-#define RPL_TRACESERVICE      "207"
-#define RPL_TRACENEWTYPE      "208"
-#define RPL_TRACECLASS        "209"
-#define RPL_STATS             "210"
-#define RPL_STATSLINKINFO     "211"
-#define RPL_STATSCOMMANDS     "212"
-#define RPL_STATSCLINE        "213"
-#define RPL_STATSILINE        "215"
-#define RPL_STATSKLINE        "216"
-#define RPL_STATSYLINE        "218"
-#define RPL_ENDOFSTATS        "219"
-#define RPL_SERVICEINFO       "231"
-#define RPL_ENDOFSERVICES     "232"
-#define RPL_SERVICE           "233"
-#define RPL_SERVLIST          "234"
-#define RPL_SERVLISTEND       "235"
-#define RPL_STATSVERBOSE      "236"
-#define RPL_STATSENGINE       "237"
-#define RPL_STATSLLINE        "241"
-#define RPL_STATSUPTIME       "242"
-#define RPL_STATSOLINE        "243"
-#define RPL_STATSHLINE        "244"
-#define RPL_STATSSLINE        "245"
-#define RPL_STATSPING         "246"
-#define RPL_STATSDLINE        "250"
-#define RPL_LUSERCLIENT       "251"
-#define RPL_LUSEROP           "252"
-#define RPL_LUSERUNKNOWN      "253"
-#define RPL_LUSERCHANNELS     "254"
-#define RPL_LUSERME           "255"
-#define RPL_ADMINME           "256"
-#define RPL_ADMINLOC1         "257"
-#define RPL_ADMINLOC2         "258"
-#define RPL_ADMINEMAIL        "259"
-#define RPL_TRACELOG          "261"
-#define RPL_TRYAGAIN          "263"
-#define RPL_LOCALUSERS        "265"
-#define RPL_GLOBALUSERS       "266"
-#define RPL_START_NETSTAT     "267"
-#define RPL_NETSTAT           "268"
-#define RPL_END_NETSTAT       "269"
-#define RPL_PRIVS             "270"
-#define RPL_SILELIST          "271"
-#define RPL_ENDOFSILELIST     "272"
-#define RPL_NOTIFY            "273"
-#define RPL_VCHANEXIST        "276"
-#define RPL_VCHANLIST         "277"
-#define RPL_VCHANHELP         "278"
-#define RPL_GLIST             "280"
-#define RPL_CHANINFO_KICKS    "296"
-#define RPL_END_CHANINFO      "299"
-#define RPL_NONE              "300"
-#define RPL_AWAY              "301"
-#define RPL_USERHOST          "302"
-#define RPL_ISON              "303"
-#define RPL_TEXT              "304"
-#define RPL_UNAWAY            "305"
-#define RPL_NOWAWAY           "306"
-#define RPL_WHOISUSER         "311"
-#define RPL_WHOISSERVER       "312"
-#define RPL_WHOISOPERATOR     "313"
-#define RPL_WHOWASUSER        "314"
-#define RPL_ENDOFWHO          "315"
-#define RPL_WHOISCHANOP       "316"
-#define RPL_WHOISIDLE         "317"
-#define RPL_ENDOFWHOIS        "318"
-#define RPL_WHOISCHANNELS     "319"
-#define RPL_WHOISVIRT         "320"
-#define RPL_LISTSTART         "321"
-#define RPL_LIST              "322"
-#define RPL_LISTEND           "323"
-#define RPL_CHANNELMODEIS     "324"
-#define RPL_CHPASSUNKNOWN     "327"
-#define RPL_CHANNEL_URL       "328"
-#define RPL_CREATIONTIME      "329"
-#define RPL_NOTOPIC           "331"
-#define RPL_TOPIC             "332"
-#define RPL_TOPICWHOTIME      "333"
-#define RPL_BADCHANPASS       "339"
-#define RPL_USERIP            "340"
-#define RPL_INVITING          "341"
-#define RPL_SUMMONING         "342"
-#define RPL_INVITED           "345"
-#define RPL_INVITELIST        "346"
-#define RPL_ENDOFINVITELIST   "347"
-#define RPL_EXCEPTLIST        "348"
-#define RPL_ENDOFEXCEPTLIST   "349"
-#define RPL_VERSION           "351"
-#define RPL_WHOREPLY          "352"
-#define RPL_NAMREPLY          "353"
-#define RPL_WHOSPCRPL         "354"
-#define RPL_NAMREPLY_         "355"
-#define RPL_KILLDONE          "361"
-#define RPL_CLOSING           "362"
-#define RPL_CLOSEEND          "363"
-#define RPL_LINKS             "364"
-#define RPL_ENDOFLINKS        "365"
-#define RPL_ENDOFNAMES        "366"
-#define RPL_BANLIST           "367"
-#define RPL_ENDOFBANLIST      "368"
-#define RPL_ENDOFWHOWAS       "369"
-#define RPL_INFO              "371"
-#define RPL_MOTD              "372"
-#define RPL_INFOSTART         "373"
-#define RPL_ENDOFINFO         "374"
-#define RPL_MOTDSTART         "375"
-#define RPL_ENDOFMOTD         "376"
-#define RPL_YOUREOPER         "381"
-#define RPL_REHASHING         "382"
-#define RPL_YOURESERVICE      "383"
-#define RPL_MYPORTIS          "384"
-#define RPL_NOTOPERANYMORE    "385"
-#define RPL_QLIST             "386"
-#define RPL_ENDOFQLIST        "387"
-#define RPL_ALIST             "388"
-#define RPL_ENDOFALIST        "389"
-#define RPL_USERSSTART        "392"
-#define RPL_USERS             "393"
-#define RPL_ENDOFUSERS        "394"
-#define RPL_NOUSERS           "395"
-#define RPL_HOSTHIDDEN        "396"
+namespace irclib {
+
+constexpr char RPL_WELCOME[]           = "001";
+constexpr char RPL_YOURHOST[]          = "002";
+constexpr char RPL_CREATED[]           = "003";
+constexpr char RPL_MYINFO[]            = "004";
+constexpr char RPL_ISUPPORT[]          = "005";
+constexpr char RPL_MAP[]               = "006";
+constexpr char RPL_MAPEND[]            = "007";
+constexpr char RPL_SNOMASK[]           = "008";
+constexpr char RPL_STATMEMTOT[]        = "009";
+constexpr char RPL_STATMEM[]           = "010";
+constexpr char RPL_YOURCOOKIE[]        = "014";
+constexpr char RPL_YOURID[]            = "042";
+constexpr char RPL_SAVENICK[]          = "043";
+constexpr char RPL_ATTEMPTINGJUNC[]    = "050";
+constexpr char RPL_ATTEMPTINGREROUTE[] = "051";
+constexpr char RPL_TRACELINK[]         = "200";
+constexpr char RPL_TRACECONNECTING[]   = "201";
+constexpr char RPL_TRACEHANDSHAKE[]    = "202";
+constexpr char RPL_TRACEUNKNOWN[]      = "203";
+constexpr char RPL_TRACEOPERATOR[]     = "204";
+constexpr char RPL_TRACEUSER[]         = "205";
+constexpr char RPL_TRACESERVER[]       = "206";
+constexpr char RPL_TRACESERVICE[]      = "207";
+constexpr char RPL_TRACENEWTYPE[]      = "208";
+constexpr char RPL_TRACECLASS[]        = "209";
+constexpr char RPL_STATS[]             = "210";
+constexpr char RPL_STATSLINKINFO[]     = "211";
+constexpr char RPL_STATSCOMMANDS[]     = "212";
+constexpr char RPL_STATSCLINE[]        = "213";
+constexpr char RPL_STATSILINE[]        = "215";
+constexpr char RPL_STATSKLINE[]        = "216";
+constexpr char RPL_STATSYLINE[]        = "218";
+constexpr char RPL_ENDOFSTATS[]        = "219";
+constexpr char RPL_SERVICEINFO[]       = "231";
+constexpr char RPL_ENDOFSERVICES[]     = "232";
+constexpr char RPL_SERVICE[]           = "233";
+constexpr char RPL_SERVLIST[]          = "234";
+constexpr char RPL_SERVLISTEND[]       = "235";
+constexpr char RPL_STATSVERBOSE[]      = "236";
+constexpr char RPL_STATSENGINE[]       = "237";
+constexpr char RPL_STATSLLINE[]        = "241";
+constexpr char RPL_STATSUPTIME[]       = "242";
+constexpr char RPL_STATSOLINE[]        = "243";
+constexpr char RPL_STATSHLINE[]        = "244";
+constexpr char RPL_STATSSLINE[]        = "245";
+constexpr char RPL_STATSPING[]         = "246";
+constexpr char RPL_STATSDLINE[]        = "250";
+constexpr char RPL_LUSERCLIENT[]       = "251";
+constexpr char RPL_LUSEROP[]           = "252";
+constexpr char RPL_LUSERUNKNOWN[]      = "253";
+constexpr char RPL_LUSERCHANNELS[]     = "254";
+constexpr char RPL_LUSERME[]           = "255";
+constexpr char RPL_ADMINME[]           = "256";
+constexpr char RPL_ADMINLOC1[]         = "257";
+constexpr char RPL_ADMINLOC2[]         = "258";
+constexpr char RPL_ADMINEMAIL[]        = "259";
+constexpr char RPL_TRACELOG[]          = "261";
+constexpr char RPL_TRYAGAIN[]          = "263";
+constexpr char RPL_LOCALUSERS[]        = "265";
+constexpr char RPL_GLOBALUSERS[]       = "266";
+constexpr char RPL_START_NETSTAT[]     = "267";
+constexpr char RPL_NETSTAT[]           = "268";
+constexpr char RPL_END_NETSTAT[]       = "269";
+constexpr char RPL_PRIVS[]             = "270";
+constexpr char RPL_SILELIST[]          = "271";
+constexpr char RPL_ENDOFSILELIST[]     = "272";
+constexpr char RPL_NOTIFY[]            = "273";
+constexpr char RPL_VCHANEXIST[]        = "276";
+constexpr char RPL_VCHANLIST[]         = "277";
+constexpr char RPL_VCHANHELP[]         = "278";
+constexpr char RPL_GLIST[]             = "280";
+constexpr char RPL_CHANINFO_KICKS[]    = "296";
+constexpr char RPL_END_CHANINFO[]      = "299";
+constexpr char RPL_NONE[]              = "300";
+constexpr char RPL_AWAY[]              = "301";
+constexpr char RPL_USERHOST[]          = "302";
+constexpr char RPL_ISON[]              = "303";
+constexpr char RPL_TEXT[]              = "304";
+constexpr char RPL_UNAWAY[]            = "305";
+constexpr char RPL_NOWAWAY[]           = "306";
+constexpr char RPL_WHOISUSER[]         = "311";
+constexpr char RPL_WHOISSERVER[]       = "312";
+constexpr char RPL_WHOISOPERATOR[]     = "313";
+constexpr char RPL_WHOWASUSER[]        = "314";
+constexpr char RPL_ENDOFWHO[]          = "315";
+constexpr char RPL_WHOISCHANOP[]       = "316";
+constexpr char RPL_WHOISIDLE[]         = "317";
+constexpr char RPL_ENDOFWHOIS[]        = "318";
+constexpr char RPL_WHOISCHANNELS[]     = "319";
+constexpr char RPL_WHOISVIRT[]         = "320";
+constexpr char RPL_LISTSTART[]         = "321";
+constexpr char RPL_LIST[]              = "322";
+constexpr char RPL_LISTEND[]           = "323";
+constexpr char RPL_CHANNELMODEIS[]     = "324";
+constexpr char RPL_CHPASSUNKNOWN[]     = "327";
+constexpr char RPL_CHANNEL_URL[]       = "328";
+constexpr char RPL_CREATIONTIME[]      = "329";
+constexpr char RPL_NOTOPIC[]           = "331";
+constexpr char RPL_TOPIC[]             = "332";
+constexpr char RPL_TOPICWHOTIME[]      = "333";
+constexpr char RPL_BADCHANPASS[]       = "339";
+constexpr char RPL_USERIP[]            = "340";
+constexpr char RPL_INVITING[]          = "341";
+constexpr char RPL_SUMMONING[]         = "342";
+constexpr char RPL_INVITED[]           = "345";
+constexpr char RPL_INVITELIST[]        = "346";
+constexpr char RPL_ENDOFINVITELIST[]   = "347";
+constexpr char RPL_EXCEPTLIST[]        = "348";
+constexpr char RPL_ENDOFEXCEPTLIST[]   = "349";
+constexpr char RPL_VERSION[]           = "351";
+constexpr char RPL_WHOREPLY[]          = "352";
+constexpr char RPL_NAMREPLY[]          = "353";
+constexpr char RPL_WHOSPCRPL[]         = "354";
+constexpr char RPL_NAMREPLY_[]         = "355";
+constexpr char RPL_KILLDONE[]          = "361";
+constexpr char RPL_CLOSING[]           = "362";
+constexpr char RPL_CLOSEEND[]          = "363";
+constexpr char RPL_LINKS[]             = "364";
+constexpr char RPL_ENDOFLINKS[]        = "365";
+constexpr char RPL_ENDOFNAMES[]        = "366";
+constexpr char RPL_BANLIST[]           = "367";
+constexpr char RPL_ENDOFBANLIST[]      = "368";
+constexpr char RPL_ENDOFWHOWAS[]       = "369";
+constexpr char RPL_INFO[]              = "371";
+constexpr char RPL_MOTD[]              = "372";
+constexpr char RPL_INFOSTART[]         = "373";
+constexpr char RPL_ENDOFINFO[]         = "374";
+constexpr char RPL_MOTDSTART[]         = "375";
+constexpr char RPL_ENDOFMOTD[]         = "376";
+constexpr char RPL_YOUREOPER[]         = "381";
+constexpr char RPL_REHASHING[]         = "382";
+constexpr char RPL_YOURESERVICE[]      = "383";
+constexpr char RPL_MYPORTIS[]          = "384";
+constexpr char RPL_NOTOPERANYMORE[]    = "385";
+constexpr char RPL_QLIST[]             = "386";
+constexpr char RPL_ENDOFQLIST[]        = "387";
+constexpr char RPL_ALIST[]             = "388";
+constexpr char RPL_ENDOFALIST[]        = "389";
+constexpr char RPL_USERSSTART[]        = "392";
+constexpr char RPL_USERS[]             = "393";
+constexpr char RPL_ENDOFUSERS[]        = "394";
+constexpr char RPL_NOUSERS[]           = "395";
+constexpr char RPL_HOSTHIDDEN[]        = "396";
+
+} // namespace irclib
