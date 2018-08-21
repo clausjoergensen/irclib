@@ -51,6 +51,7 @@ class IrcClient : public events::EventEmitter {
 
   private:
     void connected();
+
     void listen(const std::string remainder = "");
 
     void parseMessage(const std::string line);
