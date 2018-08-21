@@ -304,7 +304,7 @@ void IrcClient::processMessage(const IrcMessage message) {
         return;
     }
 
-    auto numeric_command = atoi(message.command.c_str());
+    auto numeric_command = strtol(message.command.c_str(), nullptr, 10);
     if (numeric_command >= 400 && numeric_command <= 599) {
         this->emit(PROTOCOL_ERROR, numeric_command, message);
     } else {
