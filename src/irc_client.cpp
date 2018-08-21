@@ -12,7 +12,6 @@ using namespace irclib;
 #define SUCCESS 0
 #define MAX_PARAMETERS_COUNT 15
 #define CRLF "\r\n"
-#define WINSOCK_VERSION MAKEWORD(2, 2)
 
 const char* WSAFormatError(const int errorCode);
 const std::string toUpperCase(const std::string str);
