@@ -38,6 +38,18 @@ const LPWSTR WSAFormatError(const int error_code) {
     return error_string;
 }
 
+std::string timestamp() {
+    time_t now = std::time(nullptr);
+
+    struct tm timeinfo;
+    localtime_s(&timeinfo, &now);
+
+    stringstream ss;
+    ss << std::put_time(&timeinfo, "%H:%M");
+
+    return ss.str();
+}
+
 int main() {
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
 
@@ -48,99 +60,113 @@ int main() {
 
     std::unique_ptr<IrcClient> client(new IrcClient());
     std::thread t([&client, &registration_info] {
-        client->on("message", [](const IrcMessage message) {
-            auto now = std::time(nullptr);
-            struct tm timeinfo;
-            localtime_s(&timeinfo, &now);
-            auto timestamp = std::put_time(&timeinfo, "%H:%M");
+        client->on("RPL_WELCOME", [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
+        });
 
-            if (message.command == RPL_WELCOME) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
-            } else if (message.command == RPL_YOURHOST) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
-            } else if (message.command == RPL_CREATED) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n-\r\n";
-            } else if (message.command == RPL_MYINFO) {
-                // Ignored
-            } else if (message.command == RPL_ISUPPORT) {
-                // Ignored
-            } else if (message.command == RPL_HOSTHIDDEN) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1]
-                          << " is now your display host\r\n-\r\n";
-            } else if (message.command == RPL_LUSERCLIENT) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
-            } else if (message.command == RPL_LUSERME) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
-            } else if (message.command == RPL_LOCALUSERS) {
-                std::cout << "[" << timestamp << "] "
-                          << "Current local  users:" << message.parameters[1]
-                          << " Max: " << message.parameters[2] << "\r\n";
-            } else if (message.command == RPL_GLOBALUSERS) {
-                std::cout << "[" << timestamp << "] "
-                          << "Current global users: " << message.parameters[1]
-                          << " Max: " << message.parameters[2] << "\r\n-\r\n";
-            } else if (message.command == RPL_MOTDSTART) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n-\r\n";
-            } else if (message.command == RPL_MOTD) {
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n";
-            } else if (message.command == RPL_ENDOFMOTD) {
-                std::cout << "-\r\n";
-                std::cout << "[" << timestamp << "] " << message.parameters[1] << "\r\n-\r\n";
-            } else if (message.command == CMD_MODE) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.parameters[0] << " sets mode " << message.parameters[1]
-                          << "\r\n-\r\n";
-            } else if (message.command == CMD_JOIN) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.source->getName() << " joined "
-                          << message.parameters[0] << "\r\n";
-            } else if (message.command == CMD_PART) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.source->getName() << " left " << message.parameters[0]
-                          << "\r\n";
-            } else if (message.command == RPL_TOPIC) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.parameters[1] << ": "
-                          << "Topic is: '" << message.parameters[0] << "'"
-                          << "\r\n";
-            } else if (message.command == CMD_TOPIC) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.parameters[0] << ": " << message.source->getName()
-                          << " changed the topic to '" << message.parameters[1] << "'"
-                          << "\r\n";
-            } else if (message.command == RPL_TOPICWHOTIME) {
-                std::cout << "[" << timestamp << "] "
-                          << "* " << message.parameters[1] << ": "
-                          << "Set by " << message.parameters[2] << " on " << message.parameters[3]
-                          << "\r\n";
-            } else if (message.command == RPL_NAMREPLY) {
-                // Ignored
-            } else if (message.command == RPL_ENDOFNAMES) {
-                // Ignored
-            } else if (message.command == CMD_PRIVMSG) {
-                std::cout << "[" << timestamp << "] " << message.parameters[0] << ": "
-                          << "<" << message.source->getName() << "> " << message.parameters[1]
-                          << "\r\n";
+        client->on(RPL_YOURHOST, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
+        });
+
+        client->on(RPL_CREATED, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n-\r\n";
+        });
+
+        client->on(RPL_HOSTHIDDEN, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1]
+                      << " is now your display host\r\n-\r\n";
+        });
+
+        client->on(RPL_LUSERCLIENT, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
+        });
+
+        client->on(RPL_LUSERME, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
+        });
+
+        client->on(RPL_LOCALUSERS, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "Current local  users:" << message.parameters[1]
+                      << " Max: " << message.parameters[2] << "\r\n";
+        });
+
+        client->on(RPL_GLOBALUSERS, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "Current global users: " << message.parameters[1]
+                      << " Max: " << message.parameters[2] << "\r\n-\r\n";
+        });
+
+        client->on(RPL_MOTDSTART, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n-\r\n";
+        });
+
+        client->on(RPL_MOTD, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n";
+        });
+
+        client->on(RPL_ENDOFMOTD, [](const IrcMessage message) {
+            std::cout << "-\r\n";
+            std::cout << "[" << timestamp() << "] " << message.parameters[1] << "\r\n-\r\n";
+        });
+
+        client->on(CMD_MODE, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.parameters[0] << " sets mode " << message.parameters[1]
+                      << "\r\n-\r\n";
+        });
+
+        client->on(CMD_JOIN, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.source->getName() << " joined " << message.parameters[0]
+                      << "\r\n";
+        });
+
+        client->on(CMD_PART, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.source->getName() << " left " << message.parameters[0]
+                      << "\r\n";
+        });
+
+        client->on(RPL_TOPIC, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.parameters[1] << ": "
+                      << "Topic is: '" << message.parameters[0] << "'"
+                      << "\r\n";
+        });
+
+        client->on(CMD_TOPIC, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.parameters[0] << ": " << message.source->getName()
+                      << " changed the topic to '" << message.parameters[1] << "'"
+                      << "\r\n";
+        });
+        client->on(RPL_TOPICWHOTIME, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] "
+                      << "* " << message.parameters[1] << ": "
+                      << "Set by " << message.parameters[2] << " on " << message.parameters[3]
+                      << "\r\n";
+        });
+
+        client->on(CMD_PRIVMSG, [](const IrcMessage message) {
+            std::cout << "[" << timestamp() << "] " << message.parameters[0] << ": "
+                      << "<" << message.source->getName() << "> " << message.parameters[1]
+                      << "\r\n";
+        });
+
+        client->on(PROTOCOL_ERROR, [](const int numeric_error, const IrcMessage message) {
+            if (numeric_error == ERR_UNKNOWNCOMMAND) {
+                std::cout << "[" << timestamp() << "] Unknown Command.\r\n";
             } else {
-                auto numericError = atoi(message.command.c_str());
-                if (numericError >= 400 && numericError <= 599) {
-                    if (numericError == ERR_UNKNOWNCOMMAND) {
-                        std::cout << "[" << timestamp << "] Unknown command\r\n";
-                    } else {
-                        std::cout << "[" << timestamp << "] ERROR (" << numericError << ")\r\n";
-                    }
-                } else {
-                    std::cout << "[" << timestamp << "] " << message.raw << "\r\n";
-                }
+                std::cout << "[" << timestamp() << "] ERROR (" << numeric_error << ")\r\n";
             }
         });
 
-        auto now = std::time(nullptr);
-        struct tm timeinfo;
-        localtime_s(&timeinfo, &now);
-        auto timestamp = std::put_time(&timeinfo, "%H:%M");
-        std::cout << "-\r\n";
-        std::cout << "[" << timestamp << "] * Connecting to localhost:6667\r\n-\r\n";
+        client->on(NETWORK_ERROR, [](const char* error_message) {
+            std::cout << "[" << timestamp() << "] Error: " << error_message << "\r\n";
+        });
+
+        std::cout << "[" << timestamp() << "] * Connecting to localhost:6667\r\n-\r\n";
 
         client->connect("localhost", 6667, registration_info);
     });

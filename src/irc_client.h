@@ -17,6 +17,9 @@
 #include <string>
 #include <vector>
 
+#define NETWORK_ERROR "network-error"
+#define PROTOCOL_ERROR "protocol-error"
+
 namespace irclib {
 
 // Represents a client that communicates with a server using the IRC (Internet

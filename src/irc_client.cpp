@@ -44,7 +44,7 @@ const int getNumericUserMode(const std::vector<char> modes) {
 IrcClient::IrcClient() {
     auto startup_result = ::WSAStartup(MAKEWORD(2, 2), &wsadata);
     if (startup_result != 0) {
-        printf("Error: %s\n", WSAFormatError(startup_result));
+        this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
         return;
     }
 }
@@ -55,7 +55,7 @@ IrcClient::~IrcClient() {
 
     if (this->socket != INVALID_SOCKET) {
         if (::closesocket(this->socket) != SUCCESS) {
-            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+            this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
     }
 
@@ -79,14 +79,14 @@ void IrcClient::connect(const string hostname, const int port,
     int getaddrinfo_result =
         ::getaddrinfo(hostname.c_str(), to_string(port).c_str(), &hints, &addrinfo);
     if (getaddrinfo_result != SUCCESS) {
-        printf("Error: %s\n", gai_strerror(getaddrinfo_result));
+        this->emit(NETWORK_ERROR, gai_strerror(getaddrinfo_result));
         ::WSACleanup();
         return;
     }
 
     this->socket = ::socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
     if (this->socket == INVALID_SOCKET) {
-        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         freeaddrinfo(&hints);
         ::WSACleanup();
         return;
@@ -94,9 +94,9 @@ void IrcClient::connect(const string hostname, const int port,
 
     int connect_result = ::connect(this->socket, addrinfo->ai_addr, (int)addrinfo->ai_addrlen);
     if (connect_result == SOCKET_ERROR) {
-        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         if (::closesocket(this->socket) != SUCCESS) {
-            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+            this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
         ::WSACleanup();
         return;
@@ -158,9 +158,9 @@ void IrcClient::listen(const string remainder) {
 
         this->listen();
     } else if (bytesRead == 0) {
-        printf("Connection closed\r\n");
+        this->emit(NETWORK_ERROR, "Connection closed.");
     } else {
-        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
     }
 }
 
@@ -169,9 +169,9 @@ void IrcClient::sendRawMessage(const string message) {
     auto buffer = formattedMessage.c_str();
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {
-        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         if (::closesocket(this->socket) != SUCCESS) {
-            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+            this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
         ::WSACleanup();
         return;
@@ -311,7 +311,12 @@ void IrcClient::processMessage(const IrcMessage message) {
         return;
     }
 
-    this->emit("message", message);
+    auto numeric_command = atoi(message.command.c_str());
+    if (numeric_command >= 400 && numeric_command <= 599) {
+        this->emit(PROTOCOL_ERROR, numeric_command, message);
+    } else {
+        this->emit(message.command, message);
+    }
 }
 
 void IrcClient::writeMessage(const string prefix, const string command,
@@ -347,9 +352,9 @@ void IrcClient::writeMessage(const string message) {
 
     int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (sendResult == SOCKET_ERROR) {
-        printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         if (::closesocket(this->socket) != SUCCESS) {
-            printf("Error: %s\n", WSAFormatError(::WSAGetLastError()));
+            this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
         ::WSACleanup();
         return;
@@ -460,7 +465,7 @@ const char* WSAFormatError(const int error_code) {
                              0); // 0, since getting message from system tables
 
     if (size == 0) {
-        return ("Unknown Error Code: " + to_string(error_code)).c_str();
+        return ("Unknown error code: " + to_string(error_code)).c_str();
     }
 
     return error_string;
