@@ -25,12 +25,13 @@ class IrcClient : public events::EventEmitter {
     // Tears down the connection if open.
     ~IrcClient();
 
-    // Connects to the specified server.
+    // Connects to the specified server, and performs IRC registration ([PASS], NICK, and USER).
     //
     // @param hostname The name of the remote host.
     // @param port The port number of the remote host.
     // @param registration_info The information used for registering the client.
-    void connect(const std::string hostname, const int port,
+    // @return True if the connection was successfully established; otherwise false.
+    bool connect(const std::string hostname, const int port,
                  const irclib::IrcRegistrationInfo registration_info);
 
     // Sends the specified raw message to the server.

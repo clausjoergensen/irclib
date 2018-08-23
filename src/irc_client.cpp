@@ -9,9 +9,8 @@
 using namespace std;
 using namespace irclib;
 
-#define SUCCESS 0
-#define MAX_PARAMETERS_COUNT 15
-#define CRLF "\r\n"
+#define MAX_PARAMETERS_COUNT 15 // RFC defined maximum number of parameters.
+#define CRLF "\r\n"             // IRC always uses CRLF.
 
 const char* WSAFormatError(const int errorCode);
 const std::string toUpperCase(const std::string str);
@@ -27,16 +26,10 @@ IrcClient::~IrcClient() {
         this->listening_thread.join();
     }
 
-    if (this->socket != INVALID_SOCKET) {
-        if (::closesocket(this->socket) != SUCCESS) {
-            this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
-        }
-    }
-
     ::WSACleanup();
 }
 
-void IrcClient::connect(const string hostname, const int port,
+bool IrcClient::connect(const string hostname, const int port,
                         const IrcRegistrationInfo registration_info) {
     this->hostname = hostname;
     this->port = port;
@@ -45,23 +38,23 @@ void IrcClient::connect(const string hostname, const int port,
     auto startup_result = ::WSAStartup(WINSOCK_VERSION, &wsadata);
     if (startup_result != 0) {
         this->emit(NETWORK_ERROR, WSAFormatError(startup_result));
-        return;
+        return false;
     }
 
     struct addrinfo* addrinfo;
     struct addrinfo hints;
 
-    ZeroMemory(&hints, sizeof(hints));
+    SecureZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET | AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
     int getaddrinfo_result =
         ::getaddrinfo(hostname.c_str(), to_string(port).c_str(), &hints, &addrinfo);
-    if (getaddrinfo_result != SUCCESS) {
-        this->emit(NETWORK_ERROR, gai_strerror(getaddrinfo_result));
+    if (getaddrinfo_result != 0) {
+        this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         ::WSACleanup();
-        return;
+        return false;
     }
 
     this->socket = ::socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
@@ -69,21 +62,23 @@ void IrcClient::connect(const string hostname, const int port,
         this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         freeaddrinfo(&hints);
         ::WSACleanup();
-        return;
+        return false;
     }
 
     int connect_result = ::connect(this->socket, addrinfo->ai_addr, (int)addrinfo->ai_addrlen);
     if (connect_result == SOCKET_ERROR) {
         this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
-        if (::closesocket(this->socket) != SUCCESS) {
+        if (::closesocket(this->socket) == SOCKET_ERROR) {
             this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
         ::WSACleanup();
-        return;
+        return false;
     }
 
     this->connected();
     this->listening_thread = std::thread([this] { this->listen(); });
+
+    return true;
 }
 
 void IrcClient::connected() {
@@ -149,11 +144,9 @@ void IrcClient::sendRawMessage(const string message) {
     auto result = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (result == SOCKET_ERROR) {
         this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
-        if (::closesocket(this->socket) != SUCCESS) {
+        if (::closesocket(this->socket) == SOCKET_ERROR) {
             this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
-        ::WSACleanup();
-        return;
     }
 }
 
@@ -333,12 +326,16 @@ void IrcClient::writeMessage(const string message) {
         return;
     }
 
+    if (this->socket == INVALID_SOCKET) {
+        return;
+    }
+
     auto buffer = message.c_str();
 
     int sendResult = ::send(this->socket, buffer, (int)strlen(buffer), 0);
     if (sendResult == SOCKET_ERROR) {
         this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
-        if (::closesocket(this->socket) != SUCCESS) {
+        if (::closesocket(this->socket) == SOCKET_ERROR) {
             this->emit(NETWORK_ERROR, WSAFormatError(::WSAGetLastError()));
         }
         ::WSACleanup();
