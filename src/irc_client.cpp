@@ -18,7 +18,7 @@ const int getNumericUserMode(const std::vector<char> modes);
 
 IrcClient::IrcClient() {}
 
-IrcClient::~IrcClient() {
+IrcClient::~IrcClient() noexcept { 
     this->users.clear();
     this->servers.clear();
 

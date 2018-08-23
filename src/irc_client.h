@@ -23,7 +23,7 @@ class IrcClient : public events::EventEmitter {
     IrcClient();
 
     // Tears down the connection if open.
-    ~IrcClient();
+    ~IrcClient() noexcept;
 
     // Connects to the specified server, and performs IRC registration ([PASS], NICK, and USER).
     //
