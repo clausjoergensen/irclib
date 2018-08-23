@@ -16,7 +16,7 @@ const char* WSAFormatError(const int errorCode);
 const std::string toUpperCase(const std::string str);
 const int getNumericUserMode(const std::vector<char> modes);
 
-IrcClient::IrcClient() {}
+IrcClient::IrcClient() noexcept {}
 
 IrcClient::~IrcClient() noexcept { 
     this->users.clear();

@@ -20,7 +20,7 @@ namespace irclib {
 class IrcClient : public events::EventEmitter {
   public:
     // Initializes a new instance of the IrcClient class.
-    IrcClient();
+    IrcClient() noexcept;
 
     // Tears down the connection if open.
     ~IrcClient() noexcept;
