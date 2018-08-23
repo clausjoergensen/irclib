@@ -34,16 +34,16 @@ class EventEmitter {
     EventEmitter() {}
     ~EventEmitter() {}
 
-    void on(const std::string event_name, const std::function<void()> handler);
+    void on(const std::string event_name, const std::function<void()> handler) noexcept;
 
     template <typename... Args>
-    void on(const std::string event_name, const std::function<void(Args...)> handler);
+    void on(const std::string event_name, const std::function<void(Args...)> handler) noexcept;
 
-    template <typename LambdaType> void on(const std::string event_name, const LambdaType lambda) {
+    template <typename LambdaType> void on(const std::string event_name, const LambdaType lambda) noexcept {
         this->on(event_name, make_function(lambda));
     }
 
-    template <typename... Args> void emit(const std::string event_name, const Args... args);
+    template <typename... Args> void emit(const std::string event_name, const Args... args) noexcept;
 
     EventEmitter(const EventEmitter&) = delete;
     const EventEmitter& operator=(const EventEmitter&) = delete;
@@ -68,14 +68,14 @@ class EventEmitter {
 };
 
 template <typename... Args>
-void EventEmitter::on(std::string event_name, std::function<void(Args...)> handler) {
+void EventEmitter::on(std::string event_name, std::function<void(Args...)> handler) noexcept {
     std::lock_guard<std::mutex> lock(mutex);
     this->listeners.insert(
         std::make_pair(event_name, std::make_shared<EventListener<Args...>>(event_name, handler)));
 }
 
 template <typename... Args> 
-void EventEmitter::emit(std::string event_name, Args... args) {    
+void EventEmitter::emit(std::string event_name, Args... args) noexcept {    
     std::list<std::shared_ptr<EventListener<Args...>>> listeners;   
     
     {
